@@ -1,6 +1,6 @@
 #include "font.h"
 #include "fontdata.h"
-#include "widget.h"
+#include "renderapi.h"
 
 using namespace std;
 
@@ -42,7 +42,7 @@ Font::Font()
 		const int y = i / 26;
 		const int x = i % 26;
 		SDL_Surface *glyph = SDL_CreateRGBSurface(SDL_SWSURFACE, 8, 16, 8, 0, 0, 0xFF, 0);
-		Widget::blit(bmp, glyph, x * 8, y * 16, 0, 0, 8, 16);
+		blit(bmp, glyph, x * 8, y * 16, 0, 0, 8, 16);
 		glyphs[chars[i]] = glyph;
 	}
 

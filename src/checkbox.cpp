@@ -1,6 +1,7 @@
 #include "checkbox.h"
 #include "font.h"
 #include "checkdata.h"
+#include "renderapi.h"
 #include <SDL/SDL.h>
 
 using namespace std;

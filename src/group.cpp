@@ -1,5 +1,6 @@
 #include "group.h"
 #include "font.h"
+#include "renderapi.h"
 #include <queue>
 #include <SDL/SDL.h>
 

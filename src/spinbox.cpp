@@ -1,5 +1,6 @@
 #include "spinbox.h"
 #include "font.h"
+#include "renderapi.h"
 #include <sstream>
 #include <iomanip>
 #include "arrowdata.h"

@@ -1,4 +1,4 @@
-#include "widget.h"
+#include "renderapi.h"
 #include "font.h"
 #include <SDL/SDL.h>
 #include <cmath>
@@ -33,29 +33,29 @@ using namespace std;
 namespace Gui
 {
 
-uint32 Widget::black;
-uint32 Widget::darkgrey;
-uint32 Widget::grey;
-uint32 Widget::lightgrey;
-uint32 Widget::verylightgrey;
-uint32 Widget::white;
-uint32 Widget::blue;
-uint32 Widget::red;
-uint32 Widget::green;
-uint32 Widget::yellow;
-uint32 Widget::darkblue;
-uint32 Widget::darkgreen;
-uint32 Widget::darkred;
-uint32 Widget::darkyellow;
-uint32 Widget::lightblue;
-uint32 Widget::lightgreen;
-uint32 Widget::lightred;
-uint32 Widget::lightyellow;
+uint32 black;
+uint32 darkgrey;
+uint32 grey;
+uint32 lightgrey;
+uint32 verylightgrey;
+uint32 white;
+uint32 blue;
+uint32 red;
+uint32 green;
+uint32 yellow;
+uint32 darkblue;
+uint32 darkgreen;
+uint32 darkred;
+uint32 darkyellow;
+uint32 lightblue;
+uint32 lightgreen;
+uint32 lightred;
+uint32 lightyellow;
 
-SDL_Cursor *Widget::cursor_arrow = NULL;
-SDL_Cursor *Widget::cursor_edit = NULL;
+SDL_Cursor *cursor_arrow = NULL;
+SDL_Cursor *cursor_edit = NULL;
 
-void Widget::updateGUIColors()
+void updateGUIColors()
 {
 	SDL_Surface *screen = SDL_GetVideoSurface();
 	SDL_PixelFormat *format = screen->format;
@@ -79,7 +79,7 @@ void Widget::updateGUIColors()
 	lightyellow = SDL_MapRGBA(format, 0xFF, 0xFF, 0x7F, 0x0);
 }
 
-SDL_Surface *Widget::createNativeSurface(int w, int h)
+SDL_Surface *createNativeSurface(int w, int h)
 {
 	SDL_PixelFormat *format = SDL_GetVideoSurface()->format;
 	SDL_Surface *buf = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, format->BitsPerPixel, format->Rmask, format->Gmask, format->Bmask, format->Amask);
@@ -88,7 +88,7 @@ SDL_Surface *Widget::createNativeSurface(int w, int h)
 	return buf;
 }
 
-SDL_Surface *Widget::createSubSurface(SDL_Surface *src, int x, int y, int w, int h)
+SDL_Surface *createSubSurface(SDL_Surface *src, int x, int y, int w, int h)
 {
 	SDL_PixelFormat *format = src->format;
 	w = min(src->w - x, w);
@@ -102,7 +102,7 @@ SDL_Surface *Widget::createSubSurface(SDL_Surface *src, int x, int y, int w, int
 	return buf;
 }
 
-void Widget::blit(SDL_Surface *src, SDL_Surface *dst, int x, int y)
+void blit(SDL_Surface *src, SDL_Surface *dst, int x, int y)
 {
 	SDL_Rect rsrc, rdst;
 	rsrc.x = 0;
@@ -118,7 +118,7 @@ void Widget::blit(SDL_Surface *src, SDL_Surface *dst, int x, int y)
 	SDL_BlitSurface(src, &rsrc, dst, &rdst);
 }
 
-void Widget::blit(SDL_Surface *src, SDL_Surface *dst, int x0, int y0, int x1, int y1, int w, int h)
+void blit(SDL_Surface *src, SDL_Surface *dst, int x0, int y0, int x1, int y1, int w, int h)
 {
 	SDL_Rect rsrc, rdst;
 	rsrc.x = x0;
@@ -134,7 +134,7 @@ void Widget::blit(SDL_Surface *src, SDL_Surface *dst, int x0, int y0, int x1, in
 	SDL_BlitSurface(src, &rsrc, dst, &rdst);
 }
 
-bool Widget::compareSurfaces(SDL_Surface *src, SDL_Surface *dst, int x, int y)
+bool compareSurfaces(SDL_Surface *src, SDL_Surface *dst, int x, int y)
 {
 	if (src->format->BitsPerPixel != dst->format->BitsPerPixel)
 		return true;
@@ -197,7 +197,7 @@ bool Widget::compareSurfaces(SDL_Surface *src, SDL_Surface *dst, int x, int y)
 	return false;
 }
 
-void Widget::line(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
+void line(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
 {
 #undef RENDER
 #define RENDER(BPP)\
@@ -249,7 +249,7 @@ else\
 	RENDERALL();
 }
 
-void Widget::vline(SDL_Surface *dst, int x, int y0, int y1, uint32 col)
+void vline(SDL_Surface *dst, int x, int y0, int y1, uint32 col)
 {
 	if (x < 0 || x >= dst->w)
 		return;
@@ -265,7 +265,7 @@ void Widget::vline(SDL_Surface *dst, int x, int y0, int y1, uint32 col)
 	}
 }
 
-void Widget::hline(SDL_Surface *dst, int y, int x0, int x1, uint32 col)
+void hline(SDL_Surface *dst, int y, int x0, int x1, uint32 col)
 {
 	if (y < 0 || y >= dst->h || x1 < x0)
 		return;
@@ -308,7 +308,7 @@ void Widget::hline(SDL_Surface *dst, int y, int x0, int x1, uint32 col)
 	}
 }
 
-void Widget::box(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
+void box(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
 {
 	hline(dst, y0, x0, x1, col);
 	hline(dst, y1, x0, x1, col);
@@ -316,7 +316,7 @@ void Widget::box(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
 	vline(dst, x1, y0, y1, col);
 }
 
-void Widget::fillbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
+void fillbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
 {
 	SDL_Rect rect;
 	rect.x = x0;
@@ -326,7 +326,7 @@ void Widget::fillbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 co
 	SDL_FillRect(dst, &rect, col);
 }
 
-void Widget::roundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r, uint32 col)
+void roundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r, uint32 col)
 {
 	hline(dst, y0, x0 + r, x1 - r, col);
 	hline(dst, y1, x0 + r, x1 - r, col);
@@ -338,7 +338,7 @@ void Widget::roundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r,
 	arc(dst, x1 - r, y1 - r, r, 0, 90, col);
 }
 
-void Widget::fillroundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r, uint32 col)
+void fillroundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r, uint32 col)
 {
 	fillbox(dst, x0, y0 + r, x1, y1 - r, col);
 	fillbox(dst, x0 + r, y0, x1 - r, y0 + r, col);
@@ -349,7 +349,7 @@ void Widget::fillroundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, in
 	fillcircle(dst, x1 - r, y1 - r, r, col);
 }
 
-void Widget::circle(SDL_Surface *dst, int x, int y, int r, uint32 col)
+void circle(SDL_Surface *dst, int x, int y, int r, uint32 col)
 {
 	const int r2 = r * r;
 	const int hr = int(r * M_SQRT2 * 0.5f + 0.5f);
@@ -367,7 +367,7 @@ void Widget::circle(SDL_Surface *dst, int x, int y, int r, uint32 col)
 	}
 }
 
-void Widget::fillcircle(SDL_Surface *dst, int x, int y, int r, uint32 col)
+void fillcircle(SDL_Surface *dst, int x, int y, int r, uint32 col)
 {
 	const int r2 = r * r;
 	const int hr = int(r * M_SQRT2 * 0.5f + 0.5f);
@@ -381,7 +381,7 @@ void Widget::fillcircle(SDL_Surface *dst, int x, int y, int r, uint32 col)
 	}
 }
 
-void Widget::gradientcircle(SDL_Surface *dst, int x, int y, int radius, float dx, float dy, uint32 col, uint32 dcol)
+void gradientcircle(SDL_Surface *dst, int x, int y, int radius, float dx, float dy, uint32 col, uint32 dcol)
 {
 	Uint8 r, g, b;
 	Uint8 dr, dg, db;
@@ -414,7 +414,7 @@ void Widget::gradientcircle(SDL_Surface *dst, int x, int y, int radius, float dx
 	}
 }
 
-void Widget::arc(SDL_Surface *dst, int x, int y, int r, int start, int end, uint32 col)
+void arc(SDL_Surface *dst, int x, int y, int r, int start, int end, uint32 col)
 {
 	const int r2 = r * r;
 	const int hr = int(r * M_SQRT2 * 0.5f + 0.5f);
@@ -445,21 +445,21 @@ void Widget::arc(SDL_Surface *dst, int x, int y, int r, int start, int end, uint
 	}
 }
 
-void Widget::putpixel(SDL_Surface *dst, int x, int y, uint32 col)
+void putpixel(SDL_Surface *dst, int x, int y, uint32 col)
 {
 	if (x < 0 || x >= dst->w || y < 0 || y >= dst->h)
 		return;
 	Font::setPixel(dst, x, y, col);
 }
 
-uint32 Widget::getpixel(SDL_Surface *dst, int x, int y)
+uint32 getpixel(SDL_Surface *dst, int x, int y)
 {
 	if (x < 0 || x >= dst->w || y < 0 || y >= dst->h)
 		return 0;
 	return Font::getPixel(dst, x, y);
 }
 
-void Widget::gradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, float dx, float dy, uint32 col, uint32 dcol)
+void gradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, float dx, float dy, uint32 col, uint32 dcol)
 {
 	const float mx = (x0 + x1) * 0.5f;
 	const float my = (y0 + y1) * 0.5f;
@@ -511,7 +511,7 @@ void Widget::gradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, float
 	RENDERALL();
 }
 
-void Widget::roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int radius, float dx, float dy, uint32 col, uint32 dcol)
+void roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int radius, float dx, float dy, uint32 col, uint32 dcol)
 {
 	const float mx = (x0 + x1) * 0.5f;
 	const float my = (y0 + y1) * 0.5f;
@@ -666,12 +666,12 @@ void Widget::roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1
 	}
 }
 
-void Widget::fill(SDL_Surface *dst, uint32 col)
+void fill(SDL_Surface *dst, uint32 col)
 {
 	SDL_FillRect(dst, NULL, col);
 }
 
-void Widget::initCursors()
+void initCursors()
 {
 	if (cursor_arrow)
 		return;
@@ -747,7 +747,7 @@ void Widget::initCursors()
 	cursor_edit = loadCursor(edit, 5, 7);
 }
 
-SDL_Cursor *Widget::loadCursor(const char *image, int hot_x, int hot_y)
+SDL_Cursor *loadCursor(const char *image, int hot_x, int hot_y)
 {
 	Uint8 data[4*32];
 	Uint8 mask[4*32];
@@ -784,7 +784,7 @@ SDL_Cursor *Widget::loadCursor(const char *image, int hot_x, int hot_y)
 	return SDL_CreateCursor(data, mask, 32, 32, hot_x, hot_y);
 }
 
-void Widget::vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1)
+void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1)
 {
 	SDL_PixelFormat *format = dst->format;
 	const int h = y1 - y0 + 1;

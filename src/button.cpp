@@ -1,5 +1,6 @@
 #include "button.h"
 #include "font.h"
+#include "renderapi.h"
 #include <SDL/SDL.h>
 
 namespace Gui

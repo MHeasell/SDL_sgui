@@ -2,6 +2,7 @@
 #include <SDL/SDL.h>
 #include "arrowdata.h"
 #include "font.h"
+#include "renderapi.h"
 
 using namespace std;
 

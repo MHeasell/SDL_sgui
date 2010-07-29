@@ -100,55 +100,8 @@ namespace Gui
 		virtual void emit();
 
 	public:
-		static SDL_Surface *createNativeSurface(int w, int h);
-		static SDL_Surface *createSubSurface(SDL_Surface *src, int x, int y, int w, int h);
-		static void blit(SDL_Surface *src, SDL_Surface *dst, int x, int y);
-		static void blit(SDL_Surface *src, SDL_Surface *dst, int x0, int y0, int x1, int y1, int w, int h);
 		static void emitEvent(Event e);
-		static void line(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col);
-		static void vline(SDL_Surface *dst, int x, int y0, int y1, uint32 col);
-		static void hline(SDL_Surface *dst, int y, int x0, int x1, uint32 col);
-		static void box(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col);
-		static void fillbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col);
-		static void roundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r, uint32 col);
-		static void fillroundedbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r, uint32 col);
-		static void circle(SDL_Surface *dst, int x, int y, int r, uint32 col);
-		static void fillcircle(SDL_Surface *dst, int x, int y, int r, uint32 col);
-		static void arc(SDL_Surface *dst, int x, int y, int r, int start, int end, uint32 col);
-		static void putpixel(SDL_Surface *dst, int x, int y, uint32 col);
-		static uint32 getpixel(SDL_Surface *dst, int x, int y);
-		static void gradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, float dx, float dy, uint32 col, uint32 dcol);
-		static void roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int r, float dx, float dy, uint32 col, uint32 dcol);
-		static void gradientcircle(SDL_Surface *dst, int x, int y, int r, float dx, float dy, uint32 col, uint32 dcol);
-		static void fill(SDL_Surface *dst, uint32 col);
-		static void updateGUIColors();
-		static bool compareSurfaces(SDL_Surface *src, SDL_Surface *dst, int x, int y);
-		static void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1);
-		static void initCursors();
-		static SDL_Cursor *loadCursor(const char *image, int hot_x, int hot_y);
 		static Widget *get(const gwstring &Name);
-
-	public:
-		static uint32 black;
-		static uint32 darkgrey;
-		static uint32 grey;
-		static uint32 lightgrey;
-		static uint32 verylightgrey;
-		static uint32 white;
-		static uint32 blue;
-		static uint32 red;
-		static uint32 green;
-		static uint32 yellow;
-		static uint32 darkblue;
-		static uint32 darkgreen;
-		static uint32 darkred;
-		static uint32 darkyellow;
-		static uint32 lightblue;
-		static uint32 lightgreen;
-		static uint32 lightred;
-		static uint32 lightyellow;
-		static SDL_Cursor *cursor_arrow;
-		static SDL_Cursor *cursor_edit;
 
 	protected:
 		int x, y;

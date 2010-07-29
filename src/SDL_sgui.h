@@ -28,6 +28,7 @@
 #include "receiver.h"
 
 #include "font.h"
+#include "renderapi.h"
 
 #include "unicode.h"
 

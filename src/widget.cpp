@@ -2,6 +2,7 @@
 #include "layout.h"
 #include "font.h"
 #include "receiver.h"
+#include "renderapi.h"
 #include <SDL/SDL.h>
 #include <queue>
 #include <cmath>

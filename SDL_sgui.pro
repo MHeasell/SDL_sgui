@@ -65,10 +65,11 @@ HEADERS += src/widget.h \
     src/SDL_sgui.h \
     src/tabwidget.h \
     src/scrollarea.h \
-    src/unmanagedlayout.h
+    src/unmanagedlayout.h \
+    src/renderapi.h
 QMAKE_CXXFLAGS_DEBUG += -p \
-	-O1
+    -O1
 QMAKE_LFLAGS_DEBUG += -p
-QMAKE_CXXFLAGS_RELEASE = -O2 \
+QMAKE_CXXFLAGS_RELEASE = -Os \
     -march=native \
     -mtune=native

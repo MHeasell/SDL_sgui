@@ -1,5 +1,6 @@
 #include "tabwidget.h"
 #include "font.h"
+#include "renderapi.h"
 #include <SDL/SDL.h>
 #include <algorithm>
 

@@ -1,5 +1,6 @@
 #include "progressbar.h"
 #include "font.h"
+#include "renderapi.h"
 #include <sstream>
 
 using namespace std;
