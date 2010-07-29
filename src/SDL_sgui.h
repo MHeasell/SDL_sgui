@@ -27,6 +27,8 @@
 
 #include "receiver.h"
 
+#include "font.h"
+
 #include "unicode.h"
 
 #endif // SDL_SGUI_H

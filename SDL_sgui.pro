@@ -67,7 +67,7 @@ HEADERS += src/widget.h \
     src/scrollarea.h \
     src/unmanagedlayout.h
 QMAKE_CXXFLAGS_DEBUG += -p \
-    -O0
+	-O1
 QMAKE_LFLAGS_DEBUG += -p
 QMAKE_CXXFLAGS_RELEASE = -O2 \
     -march=native \
