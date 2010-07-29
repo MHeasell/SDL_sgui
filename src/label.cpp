@@ -6,7 +6,7 @@ using namespace std;
 namespace Gui
 {
 
-Label::Label(const std::wstring &Name, const std::wstring &caption, Widget *parent)
+Label::Label(const gwstring &Name, const gwstring &caption, Widget *parent)
 	: Widget(Name, parent), caption(caption), side(LEFT), valign(TOP)
 {
 	this->h = 16;

@@ -29,7 +29,11 @@ SOURCES += src/main.cpp \
     src/renderapi.cpp \
     src/progressbar.cpp \
     src/spinbox.cpp \
-    src/receiver.cpp
+    src/receiver.cpp \
+    src/unicode.cpp \
+    src/tabwidget.cpp \
+    src/scrollarea.cpp \
+    src/unmanagedlayout.cpp
 LIBS += -lSDL \
     -lSDL_image
 HEADERS += src/widget.h \
@@ -56,9 +60,14 @@ HEADERS += src/widget.h \
     src/group.h \
     src/progressbar.h \
     src/spinbox.h \
-    src/receiver.h
+    src/receiver.h \
+    src/unicode.h \
+    src/SDL_sgui.h \
+    src/tabwidget.h \
+    src/scrollarea.h \
+    src/unmanagedlayout.h
 QMAKE_CXXFLAGS_DEBUG += -p \
-    -O1
+    -O0
 QMAKE_LFLAGS_DEBUG += -p
 QMAKE_CXXFLAGS_RELEASE = -O2 \
     -march=native \

@@ -8,7 +8,7 @@ using namespace std;
 namespace Gui
 {
 
-Group::Group(const std::wstring &Name, const std::wstring &Caption, Widget *centralWidget, Widget *parent) : Widget(Name, parent), Caption(Caption)
+Group::Group(const gwstring &Name, const gwstring &Caption, Widget *centralWidget, Widget *parent) : Widget(Name, parent), Caption(Caption)
 {
 	if (centralWidget)
 		addChild(centralWidget);
@@ -51,12 +51,18 @@ void Group::updateLayout()
 	if (Caption.empty())
 	{
 		getCentralWidget()->setPos(8, 8);
-		getCentralWidget()->resize(w - 16, h - 16);
+		if (getCentralWidget()->getWidth() != w - 16 || getCentralWidget()->getHeight() != h - 16)
+			getCentralWidget()->resize(w - 16, h - 16);
+		else
+			getCentralWidget()->updateLayout();
 	}
 	else
 	{
 		getCentralWidget()->setPos(8, 32);
-		getCentralWidget()->resize(w - 16, h - 40);
+		if (getCentralWidget()->getWidth() != w - 16 || getCentralWidget()->getHeight() != h - 40)
+			getCentralWidget()->resize(w - 16, h - 40);
+		else
+			getCentralWidget()->updateLayout();
 	}
 }
 

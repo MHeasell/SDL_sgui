@@ -7,7 +7,7 @@ using namespace std;
 namespace Gui
 {
 
-RadioButton::RadioButton(const std::wstring &Name, const std::wstring &Caption, Widget *parent) : Widget(Name, parent), Caption(Caption)
+RadioButton::RadioButton(const gwstring &Name, const gwstring &Caption, Widget *parent) : Widget(Name, parent), Caption(Caption)
 {
 	State = false;
 	buf = NULL;

@@ -13,7 +13,7 @@ namespace Gui
 
 std::map<std::wstring, Widget*> Widget::wtable;
 
-Widget::Widget(const std::wstring &Name, Widget *parent)
+Widget::Widget(const gwstring &Name, Widget *parent)
 	: x(0), y(0), w(320), h(240),
 	parent(parent), bRefresh(true), bRefreshChain(false), bFocus(false), bMouseIn(false),
 	Name(Name)
@@ -107,9 +107,25 @@ void Widget::paint(SDL_Surface *target)
 		{
 			if (!(*i)->bRefresh && !(*i)->bRefreshChain)
 				continue;
-			SDL_Surface *sub = createSubSurface(target, (*i)->x, (*i)->y, (*i)->w, (*i)->h);
-			(*i)->paint(sub);
-			SDL_FreeSurface(sub);
+			if ((*i)->x >= target->w
+				|| (*i)->y >= target->h
+				|| (*i)->x + (*i)->w <= 0
+				|| (*i)->y + (*i)->h <= 0)
+				continue;
+			if ((*i)->x >= 0 && (*i)->y >= 0)
+			{
+				SDL_Surface *sub = createSubSurface(target, (*i)->x, (*i)->y, (*i)->w, (*i)->h);
+				(*i)->paint(sub);
+				SDL_FreeSurface(sub);
+			}
+			else
+			{
+				SDL_Surface *sub = createNativeSurface((*i)->w, (*i)->h);
+				blit(target, sub, (*i)->x, (*i)->y, 0, 0, (*i)->w, (*i)->h);
+				(*i)->paint(sub);
+				blit(sub, target, (*i)->x, (*i)->y);
+				SDL_FreeSurface(sub);
+			}
 		}
 	bRefresh = false;
 	bRefreshChain = false;
@@ -363,31 +379,6 @@ void Widget::resizeEvent()
 {
 }
 
-string toUtf8(const wstring &wstr)
-{
-	string str;
-	str.reserve(wstr.size());
-
-	for(wstring::const_iterator i = wstr.begin() ; i != wstr.end() ; ++i)
-	{
-		if (*i <= 0x7F)
-			str += *i;
-		else if (*i <= 0x7FF)
-		{
-			str += 0xC0 | (*i >> 6);
-			str += 0x80 | (*i & 0x3F);
-		}
-		else
-		{
-			str += 0xE0 | (*i >> 12);
-			str += 0x80 | ((*i >> 6) & 0x3F);
-			str += 0x80 | (*i & 0x3F);
-		}
-	}
-
-	return str;
-}
-
 vector<Widget*> Widget::getGroup()
 {
 	if (parent)
@@ -411,14 +402,14 @@ const std::wstring &Widget::getName() const
 	return Name;
 }
 
-void Widget::setName(const std::wstring &Name)
+void Widget::setName(const gwstring &Name)
 {
 	wtable.erase(this->Name);
 	this->Name = Name;
 	wtable[Name] = this;
 }
 
-Widget *Widget::get(const std::wstring &Name)
+Widget *Widget::get(const gwstring &Name)
 {
 	map<wstring, Widget*>::iterator it = wtable.find(Name);
 	if (it == wtable.end())
@@ -458,6 +449,34 @@ void Widget::emit()
 {
 	for(set<Receiver*>::iterator i = listeners.begin() ; i != listeners.end() ; ++i)
 		(*i)->proc(this);
+}
+
+uint16 &getMouseX(SDL_Event *e)
+{
+	switch(e->type)
+	{
+	case SDL_MOUSEMOTION:
+		return e->motion.x;
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		return e->button.x;
+	};
+	static uint16 zero = 0;
+	return zero;
+}
+
+uint16 &getMouseY(SDL_Event *e)
+{
+	switch(e->type)
+	{
+	case SDL_MOUSEMOTION:
+		return e->motion.y;
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		return e->button.y;
+	};
+	static uint16 zero = 0;
+	return zero;
 }
 
 }

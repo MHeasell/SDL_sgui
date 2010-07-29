@@ -10,7 +10,7 @@ class Picture : public Widget
 {
 	enum { LEFT = 0, CENTER = 1, RIGHT = 2, TOP = 3, BOTTOM = 4 };
 public:
-	Picture(const std::wstring &Name, SDL_Surface *pic = NULL, Widget *parent = NULL);
+	Picture(const gwstring &Name, SDL_Surface *pic = NULL, Widget *parent = NULL);
 	virtual ~Picture();
 
 	virtual int getOptimalWidth() const;
@@ -28,13 +28,13 @@ private:
 	PROPERTY(int, VAlignment);
 };
 
-inline Picture &Picture_(const std::wstring &Name, SDL_Surface *pic = NULL, Widget *parent = NULL)
+inline Picture &Picture_(const gwstring &Name, SDL_Surface *pic = NULL, Widget *parent = NULL)
 {
 	return *(new Picture(Name, pic, parent));
 }
 
 }
 
-#define PICTURE(x)	static_cast<Gui::Picture*>(Gui::Widget::get(L""#x))
+#define PICTURE(x)	static_cast<Gui::Picture*>(Gui::Widget::get(#x))
 
 #endif // PICTURE_H

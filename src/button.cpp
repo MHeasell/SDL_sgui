@@ -5,7 +5,7 @@
 namespace Gui
 {
 
-Button::Button(const std::wstring &Name, const std::wstring &caption, CallbackType Callback) : Widget(Name), Caption(caption), Callback(Callback)
+Button::Button(const gwstring &Name, const gwstring &caption, CallbackType Callback) : Widget(Name), Caption(caption), Callback(Callback)
 {
 	state = false;
 	buf = NULL;

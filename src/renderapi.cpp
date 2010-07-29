@@ -91,6 +91,8 @@ SDL_Surface *Widget::createNativeSurface(int w, int h)
 SDL_Surface *Widget::createSubSurface(SDL_Surface *src, int x, int y, int w, int h)
 {
 	SDL_PixelFormat *format = src->format;
+	w = min(src->w - x, w);
+	h = min(src->h - y, h);
 	SDL_Surface *buf = SDL_CreateRGBSurfaceFrom((char*)src->pixels + x * format->BytesPerPixel + y * src->pitch,
 												w, h,
 												format->BitsPerPixel, src->pitch,

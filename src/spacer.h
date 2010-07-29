@@ -6,23 +6,23 @@
 namespace Gui
 {
 
-class Spacer : public Widget
-{
-public:
-	Spacer(bool vert);
-	virtual ~Spacer();
+	class Spacer : public Widget
+	{
+	public:
+		Spacer(bool vert);
+		virtual ~Spacer();
 
-	virtual int getOptimalWidth() const;
-	virtual	int getOptimalHeight() const;
+		virtual int getOptimalWidth() const;
+		virtual	int getOptimalHeight() const;
 
-private:
-	bool vert;
-};
+	private:
+		bool vert;
+	};
 
-inline Spacer &Spacer_(bool vert)
-{
-	return *(new Spacer(vert));
-}
+	inline Spacer &Spacer_(bool vert)
+	{
+		return *(new Spacer(vert));
+	}
 
 }
 

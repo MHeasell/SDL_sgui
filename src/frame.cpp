@@ -5,7 +5,7 @@ using namespace std;
 namespace Gui
 {
 
-Frame::Frame(const std::wstring &Name, Widget *centralWidget, Widget *parent) : Widget(Name, parent)
+Frame::Frame(const gwstring &Name, Widget *centralWidget, Widget *parent) : Widget(Name, parent)
 {
 	if (centralWidget)
 		addChild(centralWidget);
@@ -47,7 +47,10 @@ void Frame::updateLayout()
 	if (childs.empty())
 		return;
 	getCentralWidget()->setPos(5, 5);
-	getCentralWidget()->resize(w - 10, h - 10);
+	if (getCentralWidget()->getWidth() != w - 10 || getCentralWidget()->getHeight() != h - 10)
+		getCentralWidget()->resize(w - 10, h - 10);
+	else
+		getCentralWidget()->updateLayout();
 }
 
 void Frame::draw(SDL_Surface *target)

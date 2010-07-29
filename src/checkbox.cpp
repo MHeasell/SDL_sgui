@@ -10,7 +10,7 @@ namespace Gui
 
 SDL_Surface *CheckBox::check = NULL;
 
-CheckBox::CheckBox(const std::wstring &Name, const std::wstring &Caption, Widget *parent) : Widget(Name, parent), Caption(Caption)
+CheckBox::CheckBox(const gwstring &Name, const gwstring &Caption, Widget *parent) : Widget(Name, parent), Caption(Caption)
 {
 	State = false;
 	buf = NULL;

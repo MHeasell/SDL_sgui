@@ -38,20 +38,14 @@ void VBoxLayout::operator ()()
 	}
 
 	int n = 0;
-	const int total = childs.size();
 	float fy0 = 0.0f, fy1;
 	for(vector< pair<Widget*, uint32> >::iterator i = childs.begin() ; i != childs.end() ; ++i)
 	{
 		const int oh = optim[n++];
 		if (oh >= 0)
 		{
-			if (th < parent->getHeight())
-			{
-				if (nblanks)
-					fy1 = fy0 + oh;
-				else
-					fy1 = fy0 + float(parent->getHeight()) / (total - nblanks);
-			}
+			if (th < parent->getHeight() && nblanks)
+				fy1 = fy0 + oh + 1;
 			else
 				fy1 = fy0 + float(parent->getHeight()) * oh / th;
 		}

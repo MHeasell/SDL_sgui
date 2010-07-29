@@ -4,8 +4,8 @@
 #include <set>
 #include <map>
 #include <vector>
-#include <string>
 #include "types.h"
+#include "unicode.h"
 
 struct SDL_Surface;
 struct SDL_Cursor;
@@ -19,18 +19,20 @@ namespace Gui
 	class Widget
 	{
 		friend class Group;
+		friend class TabWidget;
+		friend class ScrollArea;
 	public:
 		enum Event { EVENT_NONE = 0,
 					 EVENT_REFRESH };
 	public:
-		Widget(const std::wstring &Name, Widget *parent = NULL);
+		Widget(const gwstring &Name, Widget *parent = NULL);
 		virtual ~Widget();
 
 		virtual void resize(int w, int h);
 
 		inline void addChild(Widget &widget) { addChild(&widget); }
-		void addChild(Widget *widget);
-		void remove(Widget *widget);
+		virtual void addChild(Widget *widget);
+		virtual void remove(Widget *widget);
 
 		virtual void paint(SDL_Surface *target);
 		virtual void refresh(const bool chain = false);
@@ -56,10 +58,12 @@ namespace Gui
 
 		virtual bool canTakeFocus() const;
 
-		void setName(const std::wstring &Name);
+		void setName(const gwstring &Name);
 		const std::wstring &getName() const;
 
+		inline void addListener(Receiver &receiver)	{	addListener(&receiver);	}
 		void addListener(Receiver *receiver);
+		inline void removeListener(Receiver &receiver)	{	removeListener(&receiver);	}
 		void removeListener(Receiver *receiver);
 
 	#define PROPERTY(type, name)\
@@ -122,7 +126,7 @@ namespace Gui
 		static void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1);
 		static void initCursors();
 		static SDL_Cursor *loadCursor(const char *image, int hot_x, int hot_y);
-		static Widget *get(const std::wstring &Name);
+		static Widget *get(const gwstring &Name);
 
 	public:
 		static uint32 black;
@@ -171,14 +175,20 @@ namespace Gui
 		static std::map<std::wstring, Widget*> wtable;
 	};
 
-	inline Widget &Widget_(const std::wstring &Name, Widget *parent = NULL)
+	inline Widget &Widget_(const gwstring &Name, Widget *parent = NULL)
 	{
 		return *(new Widget(Name, parent));
 	}
 
-	std::string toUtf8(const std::wstring &wstr);
+	uint16 &getMouseX(SDL_Event *e);
+	uint16 &getMouseY(SDL_Event *e);
+	inline uint16 &getMouseX(SDL_Event &e)	{	return getMouseX(&e);	}
+	inline uint16 &getMouseY(SDL_Event &e)	{	return getMouseY(&e);	}
 }
 
-#define WIDGET(x)	Gui::Widget::get(L""#x)
+#define WIDGET(x)	Gui::Widget::get(#x)
+
+#define LINK(x, y)		x->addListener(y)
+#define UNLINK(x, y)	x->removeListener(y)
 
 #endif // WIDGET_H

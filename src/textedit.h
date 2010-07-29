@@ -11,7 +11,7 @@ namespace Gui
 class TextEdit : public Frame
 {
 public:
-	TextEdit(const std::wstring &Name, Widget *parent = NULL);
+	TextEdit(const gwstring &Name, Widget *parent = NULL);
 	virtual ~TextEdit();
 
 	virtual void setLayout(Layout *layout);
@@ -42,13 +42,13 @@ private:
 	PROPERTY(uint32, CursorCol);
 };
 
-inline TextEdit &TextEdit_(const std::wstring &Name, Widget *parent = NULL)
+inline TextEdit &TextEdit_(const gwstring &Name, Widget *parent = NULL)
 {
 	return *(new TextEdit(Name, parent));
 }
 
 }
 
-#define TEXTEDIT(x)	static_cast<Gui::TextEdit*>(Gui::Widget::get(L""#x))
+#define TEXTEDIT(x)	static_cast<Gui::TextEdit*>(Gui::Widget::get(#x))
 
 #endif // TEXTEDIT_H

@@ -13,7 +13,7 @@ SDL_Surface *Scrollbar::arrowright = NULL;
 SDL_Surface *Scrollbar::arrowup = NULL;
 SDL_Surface *Scrollbar::arrowdown = NULL;
 
-Scrollbar::Scrollbar(const std::wstring &Name, bool orientation, Widget *parent) : Widget(Name, parent), Orientation(orientation)
+Scrollbar::Scrollbar(const gwstring &Name, bool orientation, Widget *parent) : Widget(Name, parent), Orientation(orientation)
 {
 	Value = 0;
 	Minimum = 0;
@@ -84,11 +84,11 @@ void Scrollbar::draw(SDL_Surface *target)
 		const int x0 = 0;
 		const int x1 = w - 16;
 		Font::drawGlyph(arrowleft, target, x0, my - arrowleft->h / 2, highlight == 1 ? lightblue : black);
-		Font::drawGlyph(arrowright, target, x1, my - arrowright->h / 2, highlight == 1 ? lightblue : black);
+		Font::drawGlyph(arrowright, target, x1, my - arrowright->h / 2, highlight == 2 ? lightblue : black);
 
+		roundedgradientbox(target, 16, 0, w - 17, h - 1, 4, 0.0f, 1.0f / h, grey, darkgrey);
 		if (Maximum > Minimum)
 		{
-			roundedgradientbox(target, 16, 0, w - 17, h - 1, 4, 0.0f, 1.0f / h, grey, darkgrey);
 			const float pos = float(Value - Minimum) / (Maximum - Minimum);
 			const int bw = min<int>(w - 32, max<int>(16, (w - 32) / (Maximum - Minimum + 1)));
 			const int rw = w - 32 - bw;
@@ -248,9 +248,9 @@ void Scrollbar::mouseMoveEvent(SDL_Event *e)
 				highlight = 1;
 				refresh();
 			}
-			else if (e->motion.x >= w - 16 && highlight != 1)
+			else if (e->motion.x >= w - 16 && highlight != 2)
 			{
-				highlight = 1;
+				highlight = 2;
 				refresh();
 			}
 			return;
@@ -272,11 +272,14 @@ void Scrollbar::mouseMoveEvent(SDL_Event *e)
 			Value = Minimum;
 		else
 		{
-			Value = (e->motion.y - 16) * (Maximum - Minimum) / (h - 32 - bh);
+			Value = (e->motion.y - 16 - bh / 2) * (Maximum - Minimum) / (h - 32 - bh);
 			Value = clamp(Value, Minimum, Maximum);
 		}
 		if (Value != prev)
+		{
+			emit();
 			refresh();
+		}
 	}
 	else
 	{
@@ -286,11 +289,14 @@ void Scrollbar::mouseMoveEvent(SDL_Event *e)
 			Value = Minimum;
 		else
 		{
-			Value = (e->motion.x - 16) * (Maximum - Minimum) / (w - 32 - bw);
+			Value = (e->motion.x - 16 - bw / 2) * (Maximum - Minimum) / (w - 32 - bw);
 			Value = clamp(Value, Minimum, Maximum);
 		}
 		if (Value != prev)
+		{
+			emit();
 			refresh();
+		}
 	}
 }
 
@@ -301,6 +307,21 @@ void Scrollbar::mouseLeave()
 		highlight = 0;
 		refresh();
 	}
+}
+
+void Scrollbar::onSetValue()
+{
+	Value = clamp<int>(Value, Minimum, Maximum);
+}
+
+void Scrollbar::onSetMaximum()
+{
+	Value = clamp<int>(Value, Minimum, Maximum);
+}
+
+void Scrollbar::onSetMinimum()
+{
+	Value = clamp<int>(Value, Minimum, Maximum);
 }
 
 }

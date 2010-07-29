@@ -12,7 +12,7 @@ namespace Gui
 SDL_Surface *SpinBox::arrowup = NULL;
 SDL_Surface *SpinBox::arrowdown = NULL;
 
-SpinBox::SpinBox(const wstring &Name, Widget *parent) : Widget(Name, parent)
+SpinBox::SpinBox(const gwstring &Name, Widget *parent) : Widget(Name, parent)
 {
 	Value = 1.0;
 	Minimum = 0.0;

@@ -2,7 +2,6 @@
 #define GROUP_H
 
 #include "widget.h"
-#include <string>
 
 namespace Gui
 {
@@ -10,7 +9,7 @@ namespace Gui
 class Group : public Widget
 {
 public:
-	Group(const std::wstring &Name, const std::wstring &Caption = std::wstring(), Widget *centralWidget = NULL, Widget *parent = NULL);
+	Group(const gwstring &Name, const gwstring &Caption = gwstring(), Widget *centralWidget = NULL, Widget *parent = NULL);
 	virtual ~Group();
 
 	void setCentralWidget(Widget *widget);
@@ -33,18 +32,18 @@ private:
 	PROPERTY(std::wstring, Caption)
 };
 
-inline Group &Group_(const std::wstring &Name, const std::wstring &Caption = std::wstring(), Widget *centralWidget = NULL, Widget *parent = NULL)
+inline Group &Group_(const gwstring &Name, const gwstring &Caption = gwstring(), Widget *centralWidget = NULL, Widget *parent = NULL)
 {
 	return *(new Group(Name, Caption, centralWidget, parent));
 }
 
-inline Group &Group_(const std::wstring &Name, const std::wstring &Caption, Widget &centralWidget, Widget *parent = NULL)
+inline Group &Group_(const gwstring &Name, const gwstring &Caption, Widget &centralWidget, Widget *parent = NULL)
 {
 	return *(new Group(Name, Caption, &centralWidget, parent));
 }
 
 }
 
-#define GROUP(x)	static_cast<Gui::Group*>(Gui::Widget::get(L""#x))
+#define GROUP(x)	static_cast<Gui::Group*>(Gui::Widget::get(#x))
 
 #endif // GROUP_H

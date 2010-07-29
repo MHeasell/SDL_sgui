@@ -2,7 +2,7 @@
 #define CHECKBOX_H
 
 #include "widget.h"
-#include <string>
+#include "unicode.h"
 
 namespace Gui
 {
@@ -10,7 +10,7 @@ namespace Gui
 	class CheckBox : public Widget
 	{
 	public:
-		CheckBox(const std::wstring &Name, const std::wstring &Caption, Widget *parent = NULL);
+		CheckBox(const gwstring &Name, const gwstring &Caption, Widget *parent = NULL);
 		virtual ~CheckBox();
 
 		virtual int getOptimalWidth() const;
@@ -28,12 +28,12 @@ namespace Gui
 		PROPERTY(bool, State);
 	};
 
-	inline CheckBox &CheckBox_(const std::wstring &Name, const std::wstring &Caption, Widget *parent = NULL)
+	inline CheckBox &CheckBox_(const gwstring &Name, const gwstring &Caption, Widget *parent = NULL)
 	{
 		return *(new CheckBox(Name, Caption, parent));
 	}
 }
 
-#define CHECKBOX(x)	static_cast<Gui::CheckBox*>(Gui::Widget::get(L""#x))
+#define CHECKBOX(x)	static_cast<Gui::CheckBox*>(Gui::Widget::get(#x))
 
 #endif // CHECKBOX_H

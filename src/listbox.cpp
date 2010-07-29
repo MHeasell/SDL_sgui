@@ -8,7 +8,7 @@ using namespace std;
 namespace Gui
 {
 
-ListBox::ListBox(const std::wstring &Name, Widget *parent) : Widget(Name, parent)
+ListBox::ListBox(const gwstring &Name, Widget *parent) : Widget(Name, parent)
 {
 	Selection = -1;
 	shift = 0;

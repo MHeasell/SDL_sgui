@@ -2,7 +2,6 @@
 #define LINEINPUT_H
 
 #include "frame.h"
-#include <string>
 
 namespace Gui
 {
@@ -10,7 +9,7 @@ namespace Gui
 class LineInput : public Frame
 {
 public:
-	LineInput(const std::wstring &Name, Widget *parent = NULL);
+	LineInput(const gwstring &Name, Widget *parent = NULL);
 	virtual ~LineInput();
 
 	virtual void setLayout(Layout *layout);
@@ -38,13 +37,13 @@ private:
 	PROPERTY(bool, Password);
 };
 
-inline LineInput &LineInput_(const std::wstring &Name, Widget *parent = NULL)
+inline LineInput &LineInput_(const gwstring &Name, Widget *parent = NULL)
 {
 	return *(new LineInput(Name, parent));
 }
 
 }
 
-#define LINEINPUT(x)	static_cast<Gui::LineInput*>(Gui::Widget::get(L""#x))
+#define LINEINPUT(x)	static_cast<Gui::LineInput*>(Gui::Widget::get(#x))
 
 #endif // LINEINPUT_H

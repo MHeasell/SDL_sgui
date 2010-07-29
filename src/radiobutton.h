@@ -10,7 +10,7 @@ namespace Gui
 class RadioButton : public Widget
 {
 public:
-	RadioButton(const std::wstring &Name, const std::wstring &Caption, Widget *parent = NULL);
+	RadioButton(const gwstring &Name, const gwstring &Caption, Widget *parent = NULL);
 	virtual ~RadioButton();
 
 	virtual int getOptimalWidth() const;
@@ -27,13 +27,13 @@ private:
 	PROPERTY(bool, State)
 };
 
-inline RadioButton &RadioButton_(const std::wstring &Name, const std::wstring &Caption = std::wstring(), Widget *parent = NULL)
+inline RadioButton &RadioButton_(const gwstring &Name, const gwstring &Caption = gwstring(), Widget *parent = NULL)
 {
 	return *(new RadioButton(Name, Caption, parent));
 }
 
 }
 
-#define RADIOBUTTON(x)	static_cast<Gui::RadioButton*>(Gui::Widget::get(L""#x))
+#define RADIOBUTTON(x)	static_cast<Gui::RadioButton*>(Gui::Widget::get(#x))
 
 #endif // RADIOBUTTON_H

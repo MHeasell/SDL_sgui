@@ -4,7 +4,7 @@
 namespace Gui
 {
 
-Picture::Picture(const std::wstring &Name, SDL_Surface *pic, Widget *parent) : Widget(Name, parent), pic(pic)
+Picture::Picture(const gwstring &Name, SDL_Surface *pic, Widget *parent) : Widget(Name, parent), pic(pic)
 {
 	Alignment = CENTER;
 	VAlignment = CENTER;

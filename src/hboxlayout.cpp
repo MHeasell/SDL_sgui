@@ -38,7 +38,6 @@ void HBoxLayout::operator ()()
 	}
 
 	int n = 0;
-	const int total = childs.size();
 	float fx0 = 0.0f, fx1;
 	for(vector< pair<Widget*, uint32> >::iterator i = childs.begin() ; i != childs.end() ; ++i)
 	{
@@ -48,9 +47,9 @@ void HBoxLayout::operator ()()
 			if (tw < parent->getWidth())
 			{
 				if (nblanks)
-					fx1 = fx0 + ow;
+					fx1 = fx0 + ow + 1;
 				else
-					fx1 = fx0 + float(parent->getWidth()) / (total - nblanks);
+					fx1 = fx0 + float(parent->getWidth()) * ow / tw;
 			}
 			else
 				fx1 = fx0 + float(parent->getWidth()) * ow / tw;

@@ -8,7 +8,7 @@ using namespace std;
 namespace Gui
 {
 
-TextEdit::TextEdit(const std::wstring &Name, Widget *parent) : Frame(Name, NULL, parent), CursorRow(0), CursorCol(0)
+TextEdit::TextEdit(const gwstring &Name, Widget *parent) : Frame(Name, NULL, parent), CursorRow(0), CursorCol(0)
 {
 	shiftrow = shiftcol = 0;
 	if (lines.empty())

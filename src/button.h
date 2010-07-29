@@ -2,7 +2,7 @@
 #define BUTTON_H
 
 #include "widget.h"
-#include <string>
+#include "unicode.h"
 
 namespace Gui
 {
@@ -10,7 +10,7 @@ namespace Gui
 class Button : public Widget
 {
 public:
-	Button(const std::wstring &Name, const std::wstring &caption, CallbackType Callback = NoCallback);
+	Button(const gwstring &Name, const gwstring &caption, CallbackType Callback = NoCallback);
 	virtual ~Button();
 
 	virtual int getOptimalWidth() const;
@@ -29,17 +29,17 @@ private:
 	int ox, oy;
 	bool highlight;
 
-	PROPERTY2(std::wstring, Caption);
+	PROPERTY2(gwstring, Caption);
 	PROPERTY(CallbackType, Callback);
 };
 
-inline Button &Button_(const std::wstring &Name, const std::wstring &caption = std::wstring(), CallbackType Callback = NoCallback)
+inline Button &Button_(const gwstring &Name, const gwstring &caption = gwstring(), CallbackType Callback = NoCallback)
 {
 	return *(new Button(Name, caption, Callback));
 }
 
 }
 
-#define BUTTON(x)	static_cast<Gui::Button*>(Gui::Widget::get(L""#x))
+#define BUTTON(x)	static_cast<Gui::Button*>(Gui::Widget::get(#x))
 
 #endif // BUTTON_H

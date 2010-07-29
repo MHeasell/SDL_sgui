@@ -13,7 +13,7 @@ class Frame;
 class ListBox : public Widget
 {
 public:
-	ListBox(const std::wstring &Name, Widget *parent = NULL);
+	ListBox(const gwstring &Name, Widget *parent = NULL);
 	virtual ~ListBox();
 
 	virtual int getOptimalWidth() const;
@@ -43,13 +43,13 @@ private:
 	PROPERTY(int, Selection)
 };
 
-inline ListBox &ListBox_(const std::wstring &Name, Widget *parent = NULL)
+inline ListBox &ListBox_(const gwstring &Name, Widget *parent = NULL)
 {
 	return *(new ListBox(Name, parent));
 }
 
 }
 
-#define LISTBOX(x)	static_cast<Gui::ListBox*>(Gui::Widget::get(L""#x))
+#define LISTBOX(x)	static_cast<Gui::ListBox*>(Gui::Widget::get(#x))
 
 #endif // LISTBOX_H

@@ -4,9 +4,8 @@
 namespace Gui
 {
 
-Window::Window(const std::wstring &Name, int w, int h) : Widget(Name)
+Window::Window(const gwstring &Name, int w, int h, uint32 flags) : Widget(Name), flags(flags)
 {
-	flags = MOVEABLE;
 	takeFocus();
 	this->w = -1;
 	this->h = -1;
@@ -40,10 +39,10 @@ void Window::draw(SDL_Surface *target)
 #endif
 }
 
-void Window::setTitle(const std::string &title)
+void Window::setTitle(const gwstring &title)
 {
 	this->title = title;
-	SDL_WM_SetCaption(title.c_str(), NULL);
+	SDL_WM_SetCaption(this->title.c_str(), NULL);
 }
 
 void Window::operator()()

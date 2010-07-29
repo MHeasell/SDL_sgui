@@ -2,7 +2,6 @@
 #define LABEL_H
 
 #include "widget.h"
-#include <string>
 #include <vector>
 
 namespace Gui
@@ -14,7 +13,7 @@ public:
 	enum HAlign { LEFT = 0, CENTER = 1, RIGHT = 2 };
 	enum VAlign { TOP = 0, MIDDLE = 1, BOTTOM = 2 };
 public:
-	Label(const std::wstring &Name, const std::wstring &caption = std::wstring(), Widget *parent = NULL);
+	Label(const gwstring &Name, const gwstring &caption = gwstring(), Widget *parent = NULL);
 	virtual ~Label();
 
 	inline const std::wstring &getCaption() const {	return caption;	}
@@ -41,13 +40,13 @@ private:
 	PROPERTY(uint32, Color);
 };
 
-inline Label &Label_(const std::wstring &Name, const std::wstring &caption = std::wstring(), Widget *parent = NULL)
+inline Label &Label_(const gwstring &Name, const gwstring &caption = gwstring(), Widget *parent = NULL)
 {
 	return *(new Label(Name, caption, parent));
 }
 
 }
 
-#define LABEL(x)	static_cast<Gui::Label*>(Gui::Widget::get(L""#x))
+#define LABEL(x)	static_cast<Gui::Label*>(Gui::Widget::get(#x))
 
 #endif // LABEL_H

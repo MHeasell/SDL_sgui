@@ -7,7 +7,7 @@ using namespace std;
 namespace Gui
 {
 
-ProgressBar::ProgressBar(const wstring &Name, Widget *parent) : Widget(Name, parent)
+ProgressBar::ProgressBar(const gwstring &Name, Widget *parent) : Widget(Name, parent)
 {
 	setValue(0);
 }

@@ -9,16 +9,17 @@ namespace Gui
 
 class Window : public Widget
 {
+public:
 	enum { RESIZEABLE = 1, MOVEABLE = 2, NOFRAME = 4, FULLSCREEN = 8 };
 public:
-	Window(const std::wstring &Name, int w = 640, int h = 480);
+	Window(const gwstring &Name, int w = 640, int h = 480, uint32 flags = RESIZEABLE);
 	virtual ~Window();
 
 	virtual void resize(int w, int h);
 	virtual void refresh(const bool chain = false);
 
 	inline const std::string &getTitle() const {	return title;	}
-	void setTitle(const std::string &title);
+	void setTitle(const gwstring &title);
 
 	void setResizeable(bool resizeable);
 	inline bool isResizeable() const {	return flags & RESIZEABLE;	}
@@ -48,13 +49,13 @@ private:
 	bool layoutUpdateInProgress;
 };
 
-inline Window &Window_(const std::wstring &Name, int w = 640, int h = 480)
+inline Window &Window_(const gwstring &Name, int w = 640, int h = 480)
 {
 	return *(new Window(Name, w, h));
 }
 
 }
 
-#define WINDOW(x)	static_cast<Gui::Window*>(Gui::Widget::get(L""#x))
+#define WINDOW(x)	static_cast<Gui::Window*>(Gui::Widget::get(#x))
 
 #endif // WINDOW_H

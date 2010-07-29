@@ -9,7 +9,7 @@ namespace Gui
 class ProgressBar : public Widget
 {
 public:
-	ProgressBar(const std::wstring &Name, Widget *parent = NULL);
+	ProgressBar(const gwstring &Name, Widget *parent = NULL);
 	virtual ~ProgressBar();
 
 	virtual int getOptimalWidth() const;
@@ -22,13 +22,13 @@ private:
 	PROPERTY2(int, Value);
 };
 
-inline ProgressBar &ProgressBar_(const std::wstring &Name, Widget *parent = NULL)
+inline ProgressBar &ProgressBar_(const gwstring &Name, Widget *parent = NULL)
 {
 	return *(new ProgressBar(Name, parent));
 }
 
 }
 
-#define PROGRESSBAR(x)	static_cast<Gui::ProgressBar*>(Gui::Widget::get(L""#x))
+#define PROGRESSBAR(x)	static_cast<Gui::ProgressBar*>(Gui::Widget::get(#x))
 
 #endif // PROGRESSBAR_H

@@ -8,7 +8,7 @@ using namespace std;
 namespace Gui
 {
 
-LineInput::LineInput(const std::wstring &Name, Widget *parent) : Frame(Name, NULL, parent), CursorPos(0)
+LineInput::LineInput(const gwstring &Name, Widget *parent) : Frame(Name, NULL, parent), CursorPos(0)
 {
 	Password = false;
 	shift = 0;
