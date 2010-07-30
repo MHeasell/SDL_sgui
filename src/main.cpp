@@ -32,14 +32,18 @@ int main(int argc, char *argv[])
 
 	Window wnd("window", 800, 600, Window::RESIZEABLE);
 	wnd.setTitle("Hello World!");
-	wnd.addChild(ScrollArea_("scroll"));
 	wnd.setLayout(new HBoxLayout);
 	wnd.setResizeable(true);
 
-	SCROLLAREA(scroll)->setCentralWidget(Button_("ok")
-										 / Picture_("", IMG_Load("font.png"))
-										 / Label_("", "Hello\nWorld\n! çoin")
-										 / Picture_("", IMG_Load("font.png")));
+	wnd.addChild(TabWidget_("tab"));
+
+	TABWIDGET(tab)->addTab("Tab 1", Spacer_(true)
+						   / (Spacer_(false) | Button_("ok") | Spacer_(false))
+						   / Spacer_(true));
+
+	TABWIDGET(tab)->addTab("Tab 2", TextEdit_("text"));
+
+	TABWIDGET(tab)->addTab("Tab 3", Label_("label", "Ceci est un morceau de texte\nc'est tout à fait digeste\nc'est encodé en UTF-8\n\npourtant c'est affiché par des fonctions unicode \\o/"));
 
 	BUTTON(ok)->setCaption("   oké   ");
 	BUTTON(ok)->addListener(new QuitListener);

@@ -17,8 +17,8 @@ namespace Gui
 		virtual int getOptimalWidth() const;
 		virtual int getOptimalHeight() const;
 
-		int addTab(const std::wstring &title, Widget *widget);
-		inline int addTab(const std::wstring &title, Widget &widget)	{	return addTab(title, &widget);	}
+		int addTab(const gwstring &title, Widget *widget);
+		inline int addTab(const gwstring &title, Widget &widget)	{	return addTab(title, &widget);	}
 		void removeTab(int idx);
 		const std::wstring &getTabName(int idx);
 		Widget *getTabWidget(int idx);

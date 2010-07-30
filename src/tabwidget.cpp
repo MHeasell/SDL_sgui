@@ -19,7 +19,7 @@ namespace Gui
 
 	}
 
-	int TabWidget::addTab(const std::wstring &title, Widget *widget)
+	int TabWidget::addTab(const gwstring &title, Widget *widget)
 	{
 		for(vector<pair<wstring, Widget*> >::iterator i = tabs.begin() ; i != tabs.end() ; ++i)
 			if (i->second == widget)
@@ -239,7 +239,8 @@ namespace Gui
 		if (e->button.x >= 2 && e->button.y >= 2 && e->button.y <= 24)
 		{
 			const int idx = (e->button.x - 2) / 80;
-			setCurrentTab(idx);
+			if (idx < int(tabs.size()))
+				setCurrentTab(idx);
 		}
 	}
 
