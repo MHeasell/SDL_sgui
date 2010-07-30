@@ -2,7 +2,10 @@
 #include "renderapi.h"
 #include "menubar.h"
 #include "vboxlayout.h"
+#include "floatting.h"
 #include <SDL/SDL.h>
+
+using namespace std;
 
 namespace Gui
 {
@@ -209,11 +212,7 @@ namespace Gui
 		childs.clear();
 
 		if (menubar)
-		{
-			menubar->wnd = this;
-			layout->addWidget(menubar);
-			childs.insert(menubar);
-		}
+			Widget::addChild(menubar);
 		layout->addWidget(middle);
 		childs.insert(middle);
 		refresh();
@@ -231,11 +230,131 @@ namespace Gui
 
 	void Window::addChild(Widget *widget)
 	{
-		middle->addChild(widget);
+		if (dynamic_cast<MenuBar*>(widget))
+			setMenuBar(static_cast<MenuBar*>(widget));
+		else
+			middle->addChild(widget);
 	}
 
 	void Window::remove(Widget *widget)
 	{
-		middle->remove(widget);
+		if (dynamic_cast<MenuBar*>(widget) && widget == menubar)
+			setMenuBar(NULL);
+		else
+			middle->remove(widget);
+	}
+
+	void Window::addFloatting(Floatting *widget)
+	{
+		if (floatting.count(widget) == 0)
+		{
+			floatting.insert(widget);
+			widget->setWindow(this);
+			widget->resize(widget->getOptimalWidth(), widget->getOptimalHeight());
+			refresh();
+		}
+	}
+
+	void Window::removeFloatting(Floatting *widget)
+	{
+		if (floatting.count(widget))
+		{
+			floatting.erase(widget);
+			widget->setWindow(NULL);
+			refresh();
+		}
+	}
+
+	void Window::paint(SDL_Surface *target)
+	{
+		Widget::paint(target);
+		for(set<Floatting*>::const_iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+		{
+			if ((*i)->getX() >= target->clip_rect.x + target->clip_rect.w
+				|| (*i)->getY() >= target->clip_rect.y + target->clip_rect.h
+				|| (*i)->getX() + (*i)->getWidth() <= target->clip_rect.x
+				|| (*i)->getY() + (*i)->getHeight() <= target->clip_rect.y)
+				continue;
+			SDL_Surface sub = SubSurface(target, (*i)->getX(), (*i)->getY(), (*i)->getWidth(), (*i)->getHeight());
+			(*i)->bRefresh = true;
+			(*i)->paint(&sub);
+		}
+	}
+
+	void Window::event(SDL_Event *e)
+	{
+		bool mouseOnFloatting = false;
+		switch(e->type)
+		{
+		case SDL_KEYDOWN:			/**< Keys pressed */
+		case SDL_KEYUP:				/**< Keys released */
+			for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+				(*i)->event(e);
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:	/**< Mouse button pressed */
+		case SDL_MOUSEBUTTONUP:		/**< Mouse button released */
+			for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+			{
+				if (e->button.x < (*i)->x
+					|| e->button.x >= (*i)->x + (*i)->w
+					|| e->button.y < (*i)->y
+					|| e->button.y >= (*i)->y + (*i)->h)
+				{
+					if ((*i)->bMouseIn)
+					{
+						(*i)->bMouseIn = false;
+						(*i)->mouseLeave();
+					}
+					continue;
+				}
+				else
+					mouseOnFloatting = true;
+				SDL_Event mb = *e;
+				mb.button.x -= (*i)->x;
+				mb.button.y -= (*i)->y;
+				(*i)->event(&mb);
+			}
+			break;
+		case SDL_MOUSEMOTION:			/**< Mouse moved */
+			for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+			{
+				if (e->motion.x < (*i)->x
+					|| e->motion.x >= (*i)->x + (*i)->w
+					|| e->motion.y < (*i)->y
+					|| e->motion.y >= (*i)->y + (*i)->h)
+				{
+					if ((*i)->bMouseIn)
+					{
+						(*i)->bMouseIn = false;
+						(*i)->mouseLeave();
+					}
+					continue;
+				}
+				else
+					mouseOnFloatting = true;
+				SDL_Event mm = *e;
+				mm.motion.x -= (*i)->x;
+				mm.motion.y -= (*i)->y;
+				(*i)->event(&mm);
+			}
+			break;
+
+		default:
+			return;
+		};
+		if (!mouseOnFloatting)
+			Widget::event(e);
+		else
+		{
+			for(set<Widget*>::iterator i = childs.begin() ; i != childs.end() ; ++i)
+			{
+				if ((*i)->bMouseIn)
+				{
+					(*i)->bMouseIn = false;
+					(*i)->mouseLeave();
+				}
+			}
+		}
 	}
 }

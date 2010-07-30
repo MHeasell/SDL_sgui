@@ -108,17 +108,19 @@ namespace Gui
 			bRefreshChain = true;
 		}
 		if (bRefreshChain)
+		{
 			for(set<Widget*>::const_iterator i = childs.begin() ; i != childs.end() ; ++i)
 			{
-			if (!(*i)->bRefresh && !(*i)->bRefreshChain)
-				continue;
-			if ((*i)->x >= target->clip_rect.x + target->clip_rect.w
-				|| (*i)->y >= target->clip_rect.y + target->clip_rect.h
-				|| (*i)->x + (*i)->w <= target->clip_rect.x
-				|| (*i)->y + (*i)->h <= target->clip_rect.y)
-				continue;
-			SDL_Surface sub = SubSurface(target, (*i)->x, (*i)->y, (*i)->w, (*i)->h);
-			(*i)->paint(&sub);
+				if (!(*i)->bRefresh && !(*i)->bRefreshChain)
+					continue;
+				if ((*i)->x >= target->clip_rect.x + target->clip_rect.w
+					|| (*i)->y >= target->clip_rect.y + target->clip_rect.h
+					|| (*i)->x + (*i)->w <= target->clip_rect.x
+					|| (*i)->y + (*i)->h <= target->clip_rect.y)
+					continue;
+				SDL_Surface sub = SubSurface(target, (*i)->x, (*i)->y, (*i)->w, (*i)->h);
+				(*i)->paint(&sub);
+			}
 		}
 		bRefresh = false;
 		bRefreshChain = false;

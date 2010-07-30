@@ -35,7 +35,8 @@ SOURCES += src/main.cpp \
     src/scrollarea.cpp \
     src/unmanagedlayout.cpp \
     src/menubar.cpp \
-    src/menu.cpp
+    src/menu.cpp \
+    src/floatting.cpp
 LIBS += -lSDL \
     -lSDL_image
 HEADERS += src/widget.h \
@@ -70,9 +71,10 @@ HEADERS += src/widget.h \
     src/unmanagedlayout.h \
     src/renderapi.h \
     src/menubar.h \
-    src/menu.h
+    src/menu.h \
+    src/floatting.h
 QMAKE_CXXFLAGS_DEBUG += -p \
-	-O0
+    -O0
 QMAKE_LFLAGS_DEBUG += -p
 QMAKE_CXXFLAGS_RELEASE = -Os \
     -march=native \

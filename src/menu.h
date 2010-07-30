@@ -1,12 +1,11 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "widget.h"
+#include "floatting.h"
 
 namespace Gui
 {
-
-	class Menu : public Widget
+	class Menu : public Floatting
 	{
 	public:
 		Menu(const ustring &Name, const ustring &Caption = ustring(), Widget *parent = NULL);
@@ -19,10 +18,10 @@ namespace Gui
 		virtual void draw(SDL_Surface *target);
 		virtual void mouseEnter();
 		virtual void mouseLeave();
-		virtual void mousePressEvent(SDL_Event *e);
 
 	private:
-		bool bHighLight;
+		bool bCanBeHidden;
+
 		PROPERTY(ustring, Caption)
 	};
 

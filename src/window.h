@@ -6,6 +6,7 @@
 namespace Gui
 {
 	class MenuBar;
+	class Floatting;
 
 	class Window : public Widget
 	{
@@ -44,6 +45,11 @@ namespace Gui
 		virtual void addChild(Widget &widget)	{	addChild(&widget);	}
 		virtual void remove(Widget *widget);
 
+		void addFloatting(Floatting *widget);
+		void removeFloatting(Floatting *widget);
+
+		virtual void paint(SDL_Surface *target);
+
 	private:
 		void setSDLVideo();
 
@@ -52,6 +58,7 @@ namespace Gui
 
 	protected:
 		virtual void draw(SDL_Surface *target);
+		virtual void event(SDL_Event *e);
 
 	private:
 		std::string title;
@@ -60,6 +67,7 @@ namespace Gui
 		bool layoutUpdateInProgress;
 		MenuBar *menubar;
 		Widget *middle;
+		std::set<Floatting*> floatting;
 	};
 
 	inline Window &Window_(const ustring &Name, int w = 640, int h = 480)
