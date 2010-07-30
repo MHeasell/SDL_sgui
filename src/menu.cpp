@@ -56,6 +56,7 @@ namespace Gui
 
 	void Menu::mouseLeave()
 	{
+		Widget::mouseLeave();
 		if (bCanBeHidden)
 		{
 			bCanBeHidden = false;

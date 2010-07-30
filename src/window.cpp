@@ -1,6 +1,7 @@
 #include "window.h"
 #include "renderapi.h"
 #include "menubar.h"
+#include "menu.h"
 #include "vboxlayout.h"
 #include "floatting.h"
 #include <SDL/SDL.h>
@@ -345,7 +346,15 @@ namespace Gui
 			return;
 		};
 		if (!mouseOnFloatting)
+		{
+			if (e->type == SDL_MOUSEBUTTONDOWN)
+			{
+				for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+					if (dynamic_cast<Menu*>(*i))
+						static_cast<Menu*>(*i)->hide();
+			}
 			Widget::event(e);
+		}
 		else
 		{
 			for(set<Widget*>::iterator i = childs.begin() ; i != childs.end() ; ++i)
