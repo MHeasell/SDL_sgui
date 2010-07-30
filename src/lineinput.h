@@ -9,7 +9,7 @@ namespace Gui
 class LineInput : public Frame
 {
 public:
-	LineInput(const gwstring &Name, Widget *parent = NULL);
+	LineInput(const ustring &Name, Widget *parent = NULL);
 	virtual ~LineInput();
 
 	virtual void setLayout(Layout *layout);
@@ -32,12 +32,12 @@ protected:
 private:
 	uint32 shift;
 
-	PROPERTY(std::wstring, Text);
+	PROPERTY(ustring, Text);
 	PROPERTY(uint32, CursorPos);
 	PROPERTY(bool, Password);
 };
 
-inline LineInput &LineInput_(const gwstring &Name, Widget *parent = NULL)
+inline LineInput &LineInput_(const ustring &Name, Widget *parent = NULL)
 {
 	return *(new LineInput(Name, parent));
 }

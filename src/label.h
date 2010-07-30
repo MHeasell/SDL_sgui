@@ -13,11 +13,11 @@ public:
 	enum HAlign { LEFT = 0, CENTER = 1, RIGHT = 2 };
 	enum VAlign { TOP = 0, MIDDLE = 1, BOTTOM = 2 };
 public:
-	Label(const gwstring &Name, const gwstring &caption = gwstring(), Widget *parent = NULL);
+	Label(const ustring &Name, const ustring &caption = ustring(), Widget *parent = NULL);
 	virtual ~Label();
 
 	inline const std::wstring &getCaption() const {	return caption;	}
-	void setCaption(const std::wstring &caption);
+	void setCaption(const ustring &caption);
 
 	inline HAlign getAlignment() const {	return side;	}
 	inline void setAlignment(HAlign side) {	this->side = side;	}
@@ -40,7 +40,7 @@ private:
 	PROPERTY(uint32, Color);
 };
 
-inline Label &Label_(const gwstring &Name, const gwstring &caption = gwstring(), Widget *parent = NULL)
+inline Label &Label_(const ustring &Name, const ustring &caption = ustring(), Widget *parent = NULL)
 {
 	return *(new Label(Name, caption, parent));
 }

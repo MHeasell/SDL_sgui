@@ -14,6 +14,7 @@ bool comp(const std::pair<Widget*, uint32> &a, const std::pair<Widget*, uint32> 
 class Layout
 {
 	friend class Widget;
+	friend class Window;
 public:
     Layout();
 	virtual ~Layout();

@@ -2,35 +2,34 @@
 #define RADIOBUTTON_H
 
 #include "widget.h"
-#include <string>
 
 namespace Gui
 {
 
-class RadioButton : public Widget
-{
-public:
-	RadioButton(const gwstring &Name, const gwstring &Caption, Widget *parent = NULL);
-	virtual ~RadioButton();
+	class RadioButton : public Widget
+	{
+	public:
+		RadioButton(const ustring &Name, const ustring &Caption, Widget *parent = NULL);
+		virtual ~RadioButton();
 
-	virtual int getOptimalWidth() const;
-	virtual int getOptimalHeight() const;
+		virtual int getOptimalWidth() const;
+		virtual int getOptimalHeight() const;
 
-protected:
-	virtual void draw(SDL_Surface *target);
-	virtual void mousePressEvent(SDL_Event *e);
+	protected:
+		virtual void draw(SDL_Surface *target);
+		virtual void mousePressEvent(SDL_Event *e);
 
-private:
-	SDL_Surface *buf;
+	private:
+		SDL_Surface *buf;
 
-	PROPERTY2(std::wstring, Caption)
-	PROPERTY(bool, State)
-};
+		PROPERTY2(ustring, Caption)
+		PROPERTY(bool, State)
+	};
 
-inline RadioButton &RadioButton_(const gwstring &Name, const gwstring &Caption = gwstring(), Widget *parent = NULL)
-{
-	return *(new RadioButton(Name, Caption, parent));
-}
+	inline RadioButton &RadioButton_(const ustring &Name, const ustring &Caption = ustring(), Widget *parent = NULL)
+	{
+		return *(new RadioButton(Name, Caption, parent));
+	}
 
 }
 

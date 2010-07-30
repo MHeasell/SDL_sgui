@@ -11,7 +11,7 @@ namespace Gui
 class TextEdit : public Frame
 {
 public:
-	TextEdit(const gwstring &Name, Widget *parent = NULL);
+	TextEdit(const ustring &Name, Widget *parent = NULL);
 	virtual ~TextEdit();
 
 	virtual void setLayout(Layout *layout);
@@ -21,7 +21,7 @@ public:
 	virtual int getOptimalWidth() const;
 	virtual int getOptimalHeight() const;
 
-	void setText(const std::wstring &text);
+	void setText(const ustring &text);
 	std::wstring getText() const;
 
 protected:
@@ -42,7 +42,7 @@ private:
 	PROPERTY(uint32, CursorCol);
 };
 
-inline TextEdit &TextEdit_(const gwstring &Name, Widget *parent = NULL)
+inline TextEdit &TextEdit_(const ustring &Name, Widget *parent = NULL)
 {
 	return *(new TextEdit(Name, parent));
 }

@@ -8,6 +8,8 @@
 #include "label.h"
 #include "lineinput.h"
 #include "listbox.h"
+#include "menu.h"
+#include "menubar.h"
 #include "picture.h"
 #include "progressbar.h"
 #include "radiobutton.h"

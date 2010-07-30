@@ -12,7 +12,7 @@ namespace Gui
 	class ScrollArea : public Widget, public Receiver
 	{
 	public:
-		ScrollArea(const gwstring &Name, Widget *parent = NULL);
+		ScrollArea(const ustring &Name, Widget *parent = NULL);
 		virtual ~ScrollArea();
 
 		void setCentralWidget(Widget *widget);
@@ -42,7 +42,7 @@ namespace Gui
 		PROPERTY2(int, ShiftY);
 	};
 
-	inline ScrollArea &ScrollArea_(const gwstring &Name, Widget *parent = NULL)
+	inline ScrollArea &ScrollArea_(const ustring &Name, Widget *parent = NULL)
 	{
 		return *(new ScrollArea(Name, parent));
 	}

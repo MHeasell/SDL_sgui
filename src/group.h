@@ -9,7 +9,7 @@ namespace Gui
 class Group : public Widget
 {
 public:
-	Group(const gwstring &Name, const gwstring &Caption = gwstring(), Widget *centralWidget = NULL, Widget *parent = NULL);
+	Group(const ustring &Name, const ustring &Caption = ustring(), Widget *centralWidget = NULL, Widget *parent = NULL);
 	virtual ~Group();
 
 	void setCentralWidget(Widget *widget);
@@ -29,15 +29,15 @@ protected:
 	virtual std::vector<Widget*> getGroup();
 
 private:
-	PROPERTY(std::wstring, Caption)
+	PROPERTY(ustring, Caption)
 };
 
-inline Group &Group_(const gwstring &Name, const gwstring &Caption = gwstring(), Widget *centralWidget = NULL, Widget *parent = NULL)
+inline Group &Group_(const ustring &Name, const ustring &Caption = ustring(), Widget *centralWidget = NULL, Widget *parent = NULL)
 {
 	return *(new Group(Name, Caption, centralWidget, parent));
 }
 
-inline Group &Group_(const gwstring &Name, const gwstring &Caption, Widget &centralWidget, Widget *parent = NULL)
+inline Group &Group_(const ustring &Name, const ustring &Caption, Widget &centralWidget, Widget *parent = NULL)
 {
 	return *(new Group(Name, Caption, &centralWidget, parent));
 }

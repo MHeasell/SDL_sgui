@@ -10,7 +10,7 @@ namespace Gui
 class Button : public Widget
 {
 public:
-	Button(const gwstring &Name, const gwstring &caption, CallbackType Callback = NoCallback);
+	Button(const ustring &Name, const ustring &caption, CallbackType Callback = NoCallback);
 	virtual ~Button();
 
 	virtual int getOptimalWidth() const;
@@ -29,11 +29,11 @@ private:
 	int ox, oy;
 	bool highlight;
 
-	PROPERTY2(gwstring, Caption);
+	PROPERTY2(ustring, Caption);
 	PROPERTY(CallbackType, Callback);
 };
 
-inline Button &Button_(const gwstring &Name, const gwstring &caption = gwstring(), CallbackType Callback = NoCallback)
+inline Button &Button_(const ustring &Name, const ustring &caption = ustring(), CallbackType Callback = NoCallback)
 {
 	return *(new Button(Name, caption, Callback));
 }

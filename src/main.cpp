@@ -37,6 +37,10 @@ int main(int argc, char *argv[])
 
 	wnd.addChild(TabWidget_("tab"));
 
+	wnd.setMenuBar(MenuBar_("menubar"));
+	MENUBAR(menubar)->addMenu(Menu_("M1", "Menu1"));
+	MENUBAR(menubar)->addMenu(Menu_("M2", "Menu2"));
+
 	TABWIDGET(tab)->addTab("Tab 1", Spacer_(true)
 						   / (Spacer_(false) | Button_("ok") | Spacer_(false))
 						   / Spacer_(true));

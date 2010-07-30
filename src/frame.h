@@ -10,7 +10,7 @@ class Frame : public Widget
 {
 	friend class ListBox;
 public:
-	Frame(const gwstring &Name, Widget *centralWidget = NULL, Widget *parent = NULL);
+	Frame(const ustring &Name, Widget *centralWidget = NULL, Widget *parent = NULL);
 	virtual ~Frame();
 
 	void setCentralWidget(Widget *widget);
@@ -31,12 +31,12 @@ protected:
 	PROPERTY(uint32, BackgroundColor);
 };
 
-inline Frame &Frame_(const gwstring &Name, Widget *centralWidget = NULL, Widget *parent = NULL)
+inline Frame &Frame_(const ustring &Name, Widget *centralWidget = NULL, Widget *parent = NULL)
 {
 	return *(new Frame(Name, centralWidget, parent));
 }
 
-inline Frame &Frame_(const gwstring &Name, Widget &centralWidget, Widget *parent = NULL)
+inline Frame &Frame_(const ustring &Name, Widget &centralWidget, Widget *parent = NULL)
 {
 	return *(new Frame(Name, &centralWidget, parent));
 }

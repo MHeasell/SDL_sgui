@@ -29,12 +29,12 @@ namespace Gui
 		enum Event { EVENT_NONE = 0,
 					 EVENT_REFRESH };
 	public:
-		Widget(const gwstring &Name, Widget *parent = NULL);
+		Widget(const ustring &Name, Widget *parent = NULL);
 		virtual ~Widget();
 
 		virtual void resize(int w, int h);
 
-		inline void addChild(Widget &widget) { addChild(&widget); }
+		virtual void addChild(Widget &widget) { addChild(&widget); }
 		virtual void addChild(Widget *widget);
 		virtual void remove(Widget *widget);
 
@@ -62,7 +62,9 @@ namespace Gui
 
 		virtual bool canTakeFocus() const;
 
-		void setName(const gwstring &Name);
+		virtual Widget *getRoot();
+
+		void setName(const ustring &Name);
 		const std::wstring &getName() const;
 
 		inline void addListener(Receiver &receiver)	{	addListener(&receiver);	}
@@ -105,7 +107,7 @@ namespace Gui
 
 	public:
 		static void emitEvent(Event e);
-		static Widget *get(const gwstring &Name);
+		static Widget *get(const ustring &Name);
 
 	protected:
 		int x, y;
@@ -132,7 +134,7 @@ namespace Gui
 		static std::map<std::wstring, Widget*> wtable;
 	};
 
-	inline Widget &Widget_(const gwstring &Name, Widget *parent = NULL)
+	inline Widget &Widget_(const ustring &Name, Widget *parent = NULL)
 	{
 		return *(new Widget(Name, parent));
 	}

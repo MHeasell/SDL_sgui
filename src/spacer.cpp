@@ -3,22 +3,22 @@
 namespace Gui
 {
 
-Spacer::Spacer(bool vert) : Widget(L""), vert(vert)
-{
-}
+	Spacer::Spacer(bool vert) : Widget(L""), vert(vert)
+	{
+	}
 
-Spacer::~Spacer()
-{
-}
+	Spacer::~Spacer()
+	{
+	}
 
-int Spacer::getOptimalWidth() const
-{
-	return vert ? 0 : -1;
-}
+	int Spacer::getOptimalWidth() const
+	{
+		return vert ? 0 : -1;
+	}
 
-int Spacer::getOptimalHeight() const
-{
-	return vert ? -1 : 0;
-}
+	int Spacer::getOptimalHeight() const
+	{
+		return vert ? -1 : 0;
+	}
 
 }

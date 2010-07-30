@@ -9,7 +9,7 @@ namespace Gui
 	class SpinBox : public Widget
 	{
 	public:
-		SpinBox(const gwstring &Name, Widget *parent = NULL);
+		SpinBox(const ustring &Name, Widget *parent = NULL);
 		virtual ~SpinBox();
 
 		virtual int getOptimalWidth() const;
@@ -37,7 +37,7 @@ namespace Gui
 		static SDL_Surface *arrowdown;
 	};
 
-	inline SpinBox &SpinBox_(const gwstring &Name, Widget *parent = NULL)
+	inline SpinBox &SpinBox_(const ustring &Name, Widget *parent = NULL)
 	{
 		return *(new SpinBox(Name, parent));
 	}

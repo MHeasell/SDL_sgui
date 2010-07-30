@@ -9,7 +9,7 @@ using namespace std;
 namespace Gui
 {
 
-	TabWidget::TabWidget(const gwstring &Name, Widget *parent) : Widget(Name, parent)
+	TabWidget::TabWidget(const ustring &Name, Widget *parent) : Widget(Name, parent)
 	{
 		CurrentTab = 0;
 	}
@@ -19,7 +19,7 @@ namespace Gui
 
 	}
 
-	int TabWidget::addTab(const gwstring &title, Widget *widget)
+	int TabWidget::addTab(const ustring &title, Widget *widget)
 	{
 		for(vector<pair<wstring, Widget*> >::iterator i = tabs.begin() ; i != tabs.end() ; ++i)
 			if (i->second == widget)
@@ -58,7 +58,7 @@ namespace Gui
 		return tabs[idx].second;
 	}
 
-	void TabWidget::setTabName(int idx, const std::wstring &Name)
+	void TabWidget::setTabName(int idx, const ustring &Name)
 	{
 		if (idx < 0 || idx >= int(tabs.size()))
 			return;

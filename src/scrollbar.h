@@ -12,7 +12,7 @@ namespace Gui
 	public:
 		enum { Vertical = false, Horizontal = true };
 	public:
-		Scrollbar(const gwstring &Name, bool orientation, Widget *parent = NULL);
+		Scrollbar(const ustring &Name, bool orientation, Widget *parent = NULL);
 		virtual ~Scrollbar();
 
 		virtual int getOptimalHeight() const;
@@ -39,7 +39,7 @@ namespace Gui
 		static SDL_Surface *arrowdown;
 	};
 
-	inline Scrollbar &Scrollbar_(const gwstring &Name, bool orientation, Widget *parent = NULL)
+	inline Scrollbar &Scrollbar_(const ustring &Name, bool orientation, Widget *parent = NULL)
 	{
 		return *(new Scrollbar(Name, orientation, parent));
 	}

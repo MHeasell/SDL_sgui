@@ -10,14 +10,14 @@ namespace Gui
 	std::wstring fromUtf8(const std::string &str);
 	inline const std::wstring &fromUtf8(const std::wstring &wstr)	{	return wstr;	}
 
-	class gwstring : public std::wstring
+	class ustring : public std::wstring
 	{
 	public:
-		gwstring()	{}
-		gwstring(const std::string &s) : std::wstring(fromUtf8(s))	{}
-		gwstring(const char *s) : std::wstring(fromUtf8(s))	{}
-		gwstring(const std::wstring &s) : std::wstring(s)	{}
-		gwstring(const wchar_t *s) : std::wstring(s)	{}
+		ustring()	{}
+		ustring(const std::string &s) : std::wstring(fromUtf8(s))	{}
+		ustring(const char *s) : std::wstring(fromUtf8(s))	{}
+		ustring(const std::wstring &s) : std::wstring(s)	{}
+		ustring(const wchar_t *s) : std::wstring(s)	{}
 
 		operator std::string() const {	return toUtf8(*this);	}
 		operator std::wstring() const {	return *this;	}

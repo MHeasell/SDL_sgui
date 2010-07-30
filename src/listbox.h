@@ -13,14 +13,14 @@ class Frame;
 class ListBox : public Widget
 {
 public:
-	ListBox(const gwstring &Name, Widget *parent = NULL);
+	ListBox(const ustring &Name, Widget *parent = NULL);
 	virtual ~ListBox();
 
 	virtual int getOptimalWidth() const;
 	virtual int getOptimalHeight() const;
 
-	void addElement(const std::wstring &elt);
-	void insertElement(int i, const std::wstring &elt);
+	void addElement(const ustring &elt);
+	void insertElement(int i, const ustring &elt);
 	void removeElement(int i);
 	const std::wstring &getElement(int i) const;
 	inline const std::wstring &getSelectedElement() const
@@ -43,7 +43,7 @@ private:
 	PROPERTY(int, Selection)
 };
 
-inline ListBox &ListBox_(const gwstring &Name, Widget *parent = NULL)
+inline ListBox &ListBox_(const ustring &Name, Widget *parent = NULL)
 {
 	return *(new ListBox(Name, parent));
 }

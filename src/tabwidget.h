@@ -11,18 +11,18 @@ namespace Gui
 	class TabWidget : public Widget
 	{
 	public:
-		TabWidget(const gwstring &Name, Widget *parent = NULL);
+		TabWidget(const ustring &Name, Widget *parent = NULL);
 		virtual ~TabWidget();
 
 		virtual int getOptimalWidth() const;
 		virtual int getOptimalHeight() const;
 
-		int addTab(const gwstring &title, Widget *widget);
-		inline int addTab(const gwstring &title, Widget &widget)	{	return addTab(title, &widget);	}
+		int addTab(const ustring &title, Widget *widget);
+		inline int addTab(const ustring &title, Widget &widget)	{	return addTab(title, &widget);	}
 		void removeTab(int idx);
 		const std::wstring &getTabName(int idx);
 		Widget *getTabWidget(int idx);
-		void setTabName(int idx, const std::wstring &Name);
+		void setTabName(int idx, const ustring &Name);
 		void setTabWidget(int idx, Widget *widget);
 
 		virtual void paint(SDL_Surface *target);
@@ -44,7 +44,7 @@ namespace Gui
 		PROPERTY2(int, CurrentTab);
 	};
 
-	inline TabWidget &TabWidget_(const gwstring &Name, Widget *parent = NULL)
+	inline TabWidget &TabWidget_(const ustring &Name, Widget *parent = NULL)
 	{
 		return *(new TabWidget(Name, parent));
 	}

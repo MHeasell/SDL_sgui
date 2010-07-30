@@ -8,7 +8,7 @@ using namespace std;
 namespace Gui
 {
 
-	ScrollArea::ScrollArea(const gwstring &Name, Widget *parent) : Widget(Name, parent)
+	ScrollArea::ScrollArea(const ustring &Name, Widget *parent) : Widget(Name, parent)
 	{
 		ShiftX = 0;
 		ShiftY = 0;

@@ -33,7 +33,9 @@ SOURCES += src/main.cpp \
     src/unicode.cpp \
     src/tabwidget.cpp \
     src/scrollarea.cpp \
-    src/unmanagedlayout.cpp
+    src/unmanagedlayout.cpp \
+    src/menubar.cpp \
+    src/menu.cpp
 LIBS += -lSDL \
     -lSDL_image
 HEADERS += src/widget.h \
@@ -66,9 +68,11 @@ HEADERS += src/widget.h \
     src/tabwidget.h \
     src/scrollarea.h \
     src/unmanagedlayout.h \
-    src/renderapi.h
+    src/renderapi.h \
+    src/menubar.h \
+    src/menu.h
 QMAKE_CXXFLAGS_DEBUG += -p \
-    -O1
+	-O0
 QMAKE_LFLAGS_DEBUG += -p
 QMAKE_CXXFLAGS_RELEASE = -Os \
     -march=native \

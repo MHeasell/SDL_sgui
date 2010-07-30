@@ -10,7 +10,7 @@ namespace Gui
 	class CheckBox : public Widget
 	{
 	public:
-		CheckBox(const gwstring &Name, const gwstring &Caption, Widget *parent = NULL);
+		CheckBox(const ustring &Name, const ustring &Caption, Widget *parent = NULL);
 		virtual ~CheckBox();
 
 		virtual int getOptimalWidth() const;
@@ -24,11 +24,11 @@ namespace Gui
 		SDL_Surface *buf;
 		static SDL_Surface *check;
 
-		PROPERTY2(std::wstring, Caption);
+		PROPERTY2(ustring, Caption);
 		PROPERTY(bool, State);
 	};
 
-	inline CheckBox &CheckBox_(const gwstring &Name, const gwstring &Caption, Widget *parent = NULL)
+	inline CheckBox &CheckBox_(const ustring &Name, const ustring &Caption, Widget *parent = NULL)
 	{
 		return *(new CheckBox(Name, Caption, parent));
 	}
