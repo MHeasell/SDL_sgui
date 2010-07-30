@@ -54,6 +54,18 @@ namespace Gui
 	void MenuBar::draw(SDL_Surface *target)
 	{
 		gradientbox(target, 0, 0, w - 1, h - 1, 0.0f, -0.5f / h, lightgrey, darkgrey);
+		for(vector<Menu*>::iterator i = entries.begin() ; i != entries.end() ; ++i)
+		{
+			if (dynamic_cast<Menu*>(*i))
+			{
+				if (static_cast<Menu*>(*i)->getWindow())
+				{
+					highlight = i - entries.begin();
+					break;
+				}
+			}
+		}
+
 		int x = 0;
 		for(uint32 i = 0 ; i < entries.size() ; ++i)
 		{
@@ -113,10 +125,10 @@ namespace Gui
 			{
 				for(uint32 i = 0 ; i < entries.size() ; ++i)
 					if (int(i) != highlight)
-						wnd->removeFloatting(entries[i]);
+						entries[i]->hide();
 				int ax, ay;
 				getAbsolutePos(ax, ay);
-				entries[highlight]->setPos(x + ax, y + ay + h);
+				entries[highlight]->setPos(x + ax, ay + h);
 				wnd->addFloatting(entries[highlight]);
 			}
 		}

@@ -41,6 +41,16 @@ int main(int argc, char *argv[])
 	MENUBAR(menubar)->addMenu(Menu_("M1", "Menu1"));
 	MENUBAR(menubar)->addMenu(Menu_("M2", "Menu2"));
 
+	MENU(M1)->addEntry("entry0", "hello");
+	MENU(M1)->addEntry("", "");
+	MENU(M1)->addEntry("entry1", "exit");
+	MENU(M2)->addEntry("entry2", Menu_("M3", "Menu3"));
+	MENU(M2)->addEntry("entry3", "entrée normale");
+	MENU(M3)->addEntry("entry4", "sous entrée");
+	MENU(M3)->addEntry("entry5", "sous entrée 2");
+
+	LINK(WIDGET(entry1), new QuitListener);
+
 	TABWIDGET(tab)->addTab("Tab 1", Spacer_(true)
 						   / (Spacer_(false) | Button_("ok") | Spacer_(false))
 						   / Spacer_(true));

@@ -261,6 +261,7 @@ namespace Gui
 		{
 			floatting.erase(widget);
 			widget->setWindow(NULL);
+			widget->mouseLeave();
 			refresh();
 		}
 	}

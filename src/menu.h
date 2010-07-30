@@ -14,10 +14,17 @@ namespace Gui
 		virtual int getOptimalWidth() const;
 		virtual int getOptimalHeight() const;
 
+		virtual void setLayout(Layout *layout);
+
+		void addEntry(const ustring &Name, const ustring &Caption);
+		void addEntry(const ustring &Name, Menu *menu);
+		void addEntry(const ustring &Name, Menu &menu)	{	addEntry(Name, &menu);	}
+
 	protected:
 		virtual void draw(SDL_Surface *target);
 		virtual void mouseEnter();
 		virtual void mouseLeave();
+		virtual void onHide();
 
 	private:
 		bool bCanBeHidden;

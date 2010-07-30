@@ -80,12 +80,27 @@ namespace Gui
 		inline const type &get##name() const { return name; }\
 		inline void set##name(const type &v) { this->name = v; refresh(); }
 
+	#define PROPERTYP(type, name)\
+	private:\
+		type name;\
+	public:\
+		inline type get##name() { return name; }\
+		inline void set##name(type v) { this->name = v; refresh(); }
+
 	#define PROPERTY2(type, name)\
 	private:\
 		type name;\
 	public:\
 		inline const type &get##name() const { return name; }\
 		inline void set##name(const type &v) { this->name = v; onSet##name(); refresh(); }\
+		void onSet##name();
+
+	#define PROPERTY2P(type, name)\
+	private:\
+		type name;\
+	public:\
+		inline type get##name() { return name; }\
+		inline void set##name(type v) { this->name = v; onSet##name(); refresh(); }\
 		void onSet##name();
 
 	protected:

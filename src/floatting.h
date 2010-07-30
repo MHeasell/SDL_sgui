@@ -15,6 +15,15 @@ namespace Gui
 		void setWindow(Window *wnd)	{	this->wnd = wnd;	}
 		Window *getWindow()	{	return wnd;	}
 
+		virtual void refresh(bool chain = false);
+
+		virtual Widget *getRoot();
+
+		void hide();
+
+	protected:
+		virtual void onHide() = 0;
+
 	private:
 		Window* wnd;
 	};

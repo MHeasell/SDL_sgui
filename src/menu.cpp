@@ -1,7 +1,9 @@
 #include "menu.h"
+#include "menuentry.h"
 #include "window.h"
 #include "font.h"
 #include "renderapi.h"
+#include "vboxlayout.h"
 
 using namespace std;
 
@@ -10,7 +12,7 @@ namespace Gui
 
 	Menu::Menu(const ustring &Name, const ustring &Caption, Widget *parent) : Floatting(Name, parent), Caption(Caption)
 	{
-		resize(80, 64);
+		Widget::setLayout(new VBoxLayout);
 	}
 
 	Menu::~Menu()
@@ -22,12 +24,15 @@ namespace Gui
 		int w = 0;
 		for(set<Widget*>::const_iterator i = childs.begin() ; i != childs.end() ; ++i)
 			w = max<int>(w, (*i)->getOptimalWidth());
-		return 16 + w;
+		return w;
 	}
 
 	int Menu::getOptimalHeight() const
 	{
-		return 16 + childs.size() * 16;
+		int h = 0;
+		for(set<Widget*>::const_iterator i = childs.begin() ; i != childs.end() ; ++i)
+			h += max<int>(0, (*i)->getOptimalHeight());
+		return h;
 	}
 
 	void Menu::draw(SDL_Surface *target)
@@ -54,9 +59,43 @@ namespace Gui
 		if (bCanBeHidden)
 		{
 			bCanBeHidden = false;
-			if (getWindow())
-				getWindow()->removeFloatting(this);
+			for(set<Widget*>::iterator i = childs.begin() ; i != childs.end() ; ++i)
+			{
+				if (dynamic_cast<MenuEntry*>(*i) && static_cast<MenuEntry*>(*i)->getSubMenu())
+				{
+					if (static_cast<MenuEntry*>(*i)->getSubMenu()->getWindow())
+						return;
+				}
+			}
+			hide();
 		}
 		refresh();
+	}
+
+	void Menu::setLayout(Layout *layout)
+	{
+		delete layout;
+	}
+
+	void Menu::addEntry(const ustring &Name, const ustring &Caption)
+	{
+		addChild(MenuEntry_(Name, Caption));
+	}
+
+	void Menu::addEntry(const ustring &Name, Menu *menu)
+	{
+		addChild(MenuEntry_(Name, menu));
+	}
+
+	void Menu::onHide()
+	{
+		for(set<Widget*>::iterator i = childs.begin() ; i != childs.end() ; ++i)
+		{
+			if (dynamic_cast<MenuEntry*>(*i) && static_cast<MenuEntry*>(*i)->getSubMenu())
+			{
+				if (static_cast<MenuEntry*>(*i)->getSubMenu()->getWindow())
+					static_cast<MenuEntry*>(*i)->getSubMenu()->hide();
+			}
+		}
 	}
 }
