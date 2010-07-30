@@ -12,6 +12,9 @@ namespace Gui
 		UnmanagedLayout();
 		virtual ~UnmanagedLayout();
 
+		virtual int getOptimalWidth() const;
+		virtual int getOptimalHeight() const;
+
 		virtual void operator ()();
 	};
 

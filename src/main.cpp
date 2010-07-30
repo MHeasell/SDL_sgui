@@ -50,12 +50,12 @@ int main(int argc, char *argv[])
 	BUTTON(ok)->setCaption("   oké   ");
 	BUTTON(ok)->addListener(new QuitListener);
 
-	SCROLLAREA(scroll)->setCentralWidget(Button_("", "   o<   ")
+	SCROLLAREA(scroll)->setCentralWidget(Group_("group", "group", Button_("", "   o<   ")
 										 / Picture_("", IMG_Load("font.png"))
 										 / Picture_("", IMG_Load("font.png"))
 										 / Picture_("", IMG_Load("font.png"))
 										 / Picture_("", IMG_Load("font.png"))
-										 / Picture_("", IMG_Load("font.png")));
+										 / Picture_("", IMG_Load("font.png"))));
 
 	wnd();
 

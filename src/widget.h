@@ -24,6 +24,7 @@ namespace Gui
 		friend class Layout;
 		friend class HBoxLayout;
 		friend class VBoxLayout;
+		friend class UnmanagedLayout;
 	public:
 		enum Event { EVENT_NONE = 0,
 					 EVENT_REFRESH };
