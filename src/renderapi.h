@@ -11,6 +11,7 @@ namespace Gui
 
 	SDL_Surface *createNativeSurface(int w, int h);
 	SDL_Surface *createSubSurface(SDL_Surface *src, int x, int y, int w, int h);
+	SDL_Surface SubSurface(SDL_Surface *src, int x, int y, int w, int h);
 	void blit(SDL_Surface *src, SDL_Surface *dst, int x, int y);
 	void blit(SDL_Surface *src, SDL_Surface *dst, int x0, int y0, int x1, int y1, int w, int h);
 	void line(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col);

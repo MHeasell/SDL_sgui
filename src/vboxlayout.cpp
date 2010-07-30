@@ -79,4 +79,24 @@ Widget &operator/(Widget *w1, Widget &w2)
 	return *widget;
 }
 
+int VBoxLayout::getOptimalWidth() const
+{
+	if (parent->childs.empty())
+		return parent->w;
+	int w = 0;
+	for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
+		w = max(w, (*i)->getOptimalWidth());
+	return w == 0 ? -1 : w;
+}
+
+int VBoxLayout::getOptimalHeight() const
+{
+	if (parent->childs.empty())
+		return parent->h;
+	int h = 0;
+	for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
+		h += max(0, (*i)->getOptimalHeight());
+	return h == 0 ? -1 : h;
+}
+
 }

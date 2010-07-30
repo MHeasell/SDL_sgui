@@ -12,6 +12,9 @@ public:
 	VBoxLayout();
 	virtual ~VBoxLayout();
 
+	virtual int getOptimalWidth() const;
+	virtual int getOptimalHeight() const;
+
 protected:
 	virtual void operator ()();
 };

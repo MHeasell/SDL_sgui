@@ -23,6 +23,8 @@ protected:
 	void remove(Widget *widget);
 	void clear();
 	virtual void operator()();
+	virtual int getOptimalWidth() const;
+	virtual int getOptimalHeight() const;
 
 protected:
 	std::map<Widget*, uint32> wmap;

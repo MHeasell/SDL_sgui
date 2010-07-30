@@ -2,6 +2,11 @@
 #include "fontdata.h"
 #include "renderapi.h"
 
+#define _X0(surface)	((surface)->clip_rect.x)
+#define _Y0(surface)	((surface)->clip_rect.y)
+#define _X1(surface)	((surface)->clip_rect.x + (surface)->clip_rect.w)
+#define _Y1(surface)	((surface)->clip_rect.y + (surface)->clip_rect.h)
+
 using namespace std;
 
 namespace Gui
@@ -52,10 +57,14 @@ Font::Font()
 void Font::print(SDL_Surface *bmp, int x, int y, const string &str, unsigned int l)
 {
 	Font *font = Instance();
+	if (y >= _Y1(bmp) || y + 16 <= _Y0(bmp))
+		return;
 	for(string::const_iterator i = str.begin() ; i != str.end() ; ++i, x += 8)
 	{
 		if (font->glyphs.count(*i) == 0)
 			continue;
+		if (x >= _X1(bmp))
+			return;
 		drawGlyph(font->glyphs[*i], bmp, x, y, l);
 	}
 }
@@ -63,10 +72,14 @@ void Font::print(SDL_Surface *bmp, int x, int y, const string &str, unsigned int
 void Font::print(SDL_Surface *bmp, int x, int y, const wstring &str, unsigned int l)
 {
 	Font *font = Instance();
+	if (y >= _Y1(bmp) || y + 16 <= _Y0(bmp))
+		return;
 	for(wstring::const_iterator i = str.begin() ; i != str.end() ; ++i, x += 8)
 	{
 		if (font->glyphs.count(*i) == 0)
 			continue;
+		if (x >= _X1(bmp))
+			return;
 		drawGlyph(font->glyphs[*i], bmp, x, y, l);
 	}
 }
@@ -82,15 +95,18 @@ void Font::drawGlyph(SDL_Surface *glyph, SDL_Surface *dst, int x, int y, unsigne
 		for(int dy = 0 ; dy < glyph->h ; ++dy)
 		{
 			const int sy = y + dy;
-			if (sy < 0 || sy >= dst->h)
+			if (sy < _Y0(dst) || sy >= _Y1(dst))
+			{
+				pg += glyph->pitch;
 				continue;
+			}
 			byte *p = (byte*)dst->pixels + sy * dst->pitch + x;
 			int	prev = -1;
 			for(int dx = 0 ; dx < glyph->w ; ++dx, ++pg, ++p)
 			{
 				const int alpha = *pg;
 				const int sx = x + dx;
-				if (sx < 0 || sx >= dst->w || alpha == 0)
+				if (sx < _X0(dst) || sx >= _X1(dst) || alpha == 0)
 				{
 					prev = -1;
 					continue;
@@ -120,14 +136,17 @@ void Font::drawGlyph(SDL_Surface *glyph, SDL_Surface *dst, int x, int y, unsigne
 		for(int dy = 0 ; dy < glyph->h ; ++dy)
 		{
 			const int sy = y + dy;
-			if (sy < 0 || sy >= dst->h)
+			if (sy < _Y0(dst) || sy >= _Y1(dst))
+			{
+				pg += glyph->pitch;
 				continue;
+			}
 			uint16 *p = (uint16*)((byte*)dst->pixels + sy * dst->pitch + x * 2);
 			for(int dx = 0 ; dx < glyph->w ; ++dx, ++pg, ++p)
 			{
 				const int alpha = *pg;
 				const int sx = x + dx;
-				if (sx < 0 || sx >= dst->w || alpha == 0)
+				if (sx < _X0(dst) || sx >= _X1(dst) || alpha == 0)
 					continue;
 				uint16 r, g, b;
 				r = (*p >> 11) & 31;
@@ -150,14 +169,17 @@ void Font::drawGlyph(SDL_Surface *glyph, SDL_Surface *dst, int x, int y, unsigne
 		for(int dy = 0 ; dy < glyph->h ; ++dy)
 		{
 			const int sy = y + dy;
-			if (sy < 0 || sy >= dst->h)
+			if (sy < _Y0(dst) || sy >= _Y1(dst))
+			{
+				pg += glyph->pitch;
 				continue;
+			}
 			byte *p = (byte*)dst->pixels + sy * dst->pitch + x * 3;
 			for(int dx = 0 ; dx < glyph->w ; ++dx, ++pg)
 			{
 				const int alpha = *pg;
 				const int sx = x + dx;
-				if (sx < 0 || sx >= dst->w || alpha == 0)
+				if (sx < _X0(dst) || sx >= _X1(dst) || alpha == 0)
 				{
 					p += 3;
 					continue;
@@ -177,14 +199,17 @@ void Font::drawGlyph(SDL_Surface *glyph, SDL_Surface *dst, int x, int y, unsigne
 		for(int dy = 0 ; dy < glyph->h ; ++dy)
 		{
 			const int sy = y + dy;
-			if (sy < 0 || sy >= dst->h)
+			if (sy < _Y0(dst) || sy >= _Y1(dst))
+			{
+				pg += glyph->pitch;
 				continue;
+			}
 			byte *p = (byte*)dst->pixels + sy * dst->pitch + x * 4;
 			for(int dx = 0 ; dx < glyph->w ; ++dx, ++pg)
 			{
 				const int alpha = *pg;
 				const int sx = x + dx;
-				if (sx < 0 || sx >= dst->w || alpha == 0)
+				if (sx < _X0(dst) || sx >= _X1(dst) || alpha == 0)
 				{
 					p += 4;
 					continue;

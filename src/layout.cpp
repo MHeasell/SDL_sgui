@@ -76,4 +76,24 @@ Widget &operator+(Widget *w1, Widget &w2)
 	return *widget;
 }
 
+int Layout::getOptimalWidth() const
+{
+	if (parent->childs.empty())
+		return parent->w;
+	int w = 0;
+	for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
+		w += max(0, (*i)->getOptimalWidth());
+	return w == 0 ? -1 : w;
+}
+
+int Layout::getOptimalHeight() const
+{
+	if (parent->childs.empty())
+		return parent->h;
+	int h = 0;
+	for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
+		h = max(h, (*i)->getOptimalHeight());
+	return h == 0 ? -1 : h;
+}
+
 }

@@ -3,6 +3,11 @@
 #include <SDL/SDL.h>
 #include <cmath>
 
+#define _X0(surface)	((surface)->clip_rect.x)
+#define _Y0(surface)	((surface)->clip_rect.y)
+#define _X1(surface)	((surface)->clip_rect.x + (surface)->clip_rect.w)
+#define _Y1(surface)	((surface)->clip_rect.y + (surface)->clip_rect.h)
+
 #define RENDERALL()\
 switch(dst->format->BytesPerPixel)\
 {\
@@ -97,9 +102,41 @@ SDL_Surface *createSubSurface(SDL_Surface *src, int x, int y, int w, int h)
 												w, h,
 												format->BitsPerPixel, src->pitch,
 												format->Rmask, format->Gmask, format->Bmask, format->Amask);
+	buf->clip_rect = src->clip_rect;
+	const int x0 = buf->clip_rect.x;
+	const int y0 = buf->clip_rect.y;
+	const int x1 = x0 + buf->clip_rect.w;
+	const int y1 = y0 + buf->clip_rect.h;
+	buf->clip_rect.x = max<int>(x, buf->clip_rect.x);
+	buf->clip_rect.y = max<int>(y, buf->clip_rect.y);
+	buf->clip_rect.w = min<int>(x1 - buf->clip_rect.x, x + w - buf->clip_rect.x);
+	buf->clip_rect.h = min<int>(y1 - buf->clip_rect.y, y + h - buf->clip_rect.y);
+	buf->clip_rect.x -= x;
+	buf->clip_rect.y -= y;
+
 	if (format->palette)
 		SDL_SetPalette(buf, SDL_LOGPAL, format->palette->colors, 0, format->palette->ncolors);
 	return buf;
+}
+
+SDL_Surface SubSurface(SDL_Surface *src, int x, int y, int w, int h)
+{
+	SDL_Surface sub = *src;
+	sub.pixels = (byte*)sub.pixels + y * sub.pitch + x * sub.format->BytesPerPixel;
+	sub.w = min<int>(w, sub.w - x);
+	sub.h = min<int>(h, sub.h - y);
+	const int x0 = sub.clip_rect.x;
+	const int y0 = sub.clip_rect.y;
+	const int x1 = x0 + sub.clip_rect.w;
+	const int y1 = y0 + sub.clip_rect.h;
+	sub.clip_rect.x = max<int>(x, sub.clip_rect.x);
+	sub.clip_rect.y = max<int>(y, sub.clip_rect.y);
+	sub.clip_rect.w = min<int>(x1 - sub.clip_rect.x, x + w - sub.clip_rect.x);
+	sub.clip_rect.h = min<int>(y1 - sub.clip_rect.y, y + h - sub.clip_rect.y);
+	sub.clip_rect.x -= x;
+	sub.clip_rect.y -= y;
+
+	return sub;
 }
 
 void blit(SDL_Surface *src, SDL_Surface *dst, int x, int y)
@@ -138,7 +175,10 @@ bool compareSurfaces(SDL_Surface *src, SDL_Surface *dst, int x, int y)
 {
 	if (src->format->BitsPerPixel != dst->format->BitsPerPixel)
 		return true;
-	if (x < 0 || y < 0 || src->w + x > dst->w || src->h + y > dst->h)
+	if (x < _X0(dst)
+		|| y < _Y0(dst)
+		|| src->w + x > _X1(dst)
+		|| src->h + y > _Y1(dst))
 		return true;
 	switch(src->format->BytesPerPixel)
 	{
@@ -203,75 +243,75 @@ void line(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
 #define RENDER(BPP)\
 	if (abs(x0 - x1) > abs(y0 - y1))\
 	{\
-	 if (x0 > x1)\
-	 {\
-	  x0 ^= x1;	x1 ^= x0;	x0 ^= x1;\
-								  y0 ^= y1;	y1 ^= y0;	y0 ^= y1;\
-														  }\
-const int dx = x1 - x0;\
-			   const int hdx = dx / 2;\
-							   for(int x = x0 ; x <= x1 ; ++x)\
-							   {\
-								if (x < 0 || x >= dst->w)\
-								continue;\
-								int y = y0 + ((y1 - y0) * (x - x0) + hdx) / dx;\
-										if (y < 0 || y >= dst->h)\
-										continue;\
-										Font::setPixel##BPP(dst, x, y, col);\
-									}\
-}\
-else if (y0 != y1)\
-{\
- if (y0 > y1)\
- {\
-  x0 ^= x1;	x1 ^= x0;	x0 ^= x1;\
-							  y0 ^= y1;	y1 ^= y0;	y0 ^= y1;\
-													  }\
-const int dy = y1 - y0;\
-			   const int hdy = dy / 2;\
-							   for(int y = y0 ; y <= y1 ; ++y)\
-							   {\
-								if (y < 0 || y >= dst->h)\
-								continue;\
-								int x = x0 + ((x1 - x0) * (y - y0) + hdy) / dy;\
-										if (x < 0 || x >= dst->w)\
-										continue;\
-										Font::setPixel##BPP(dst, x, y, col);\
-									}\
-}\
-else\
-{\
- if (y0 < 0 || y0 >= dst->h || x0 < 0 || x0 >= dst->w)\
- return;\
- Font::setPixel##BPP(dst, x0, y0, col);\
-}
+		if (x0 > x1)\
+		{\
+			x0 ^= x1;	x1 ^= x0;	x0 ^= x1;\
+			y0 ^= y1;	y1 ^= y0;	y0 ^= y1;\
+		}\
+		const int dx = x1 - x0;\
+		const int hdx = dx / 2;\
+		for(int x = x0 ; x <= x1 ; ++x)\
+		{\
+			if (x < _X0(dst) || x >= _X1(dst))\
+				continue;\
+			int y = y0 + ((y1 - y0) * (x - x0) + hdx) / dx;\
+			if (y < _Y0(dst) || y >= _Y1(dst))\
+				continue;\
+			Font::setPixel##BPP(dst, x, y, col);\
+		}\
+	}\
+	else if (y0 != y1)\
+	{\
+		if (y0 > y1)\
+		{\
+			x0 ^= x1;	x1 ^= x0;	x0 ^= x1;\
+			y0 ^= y1;	y1 ^= y0;	y0 ^= y1;\
+		}\
+		const int dy = y1 - y0;\
+		const int hdy = dy / 2;\
+		for(int y = y0 ; y <= y1 ; ++y)\
+		{\
+			if (y < _Y0(dst) || y >= _Y1(dst))\
+				continue;\
+			int x = x0 + ((x1 - x0) * (y - y0) + hdy) / dy;\
+			if (x < _X0(dst) || x >= _X1(dst))\
+				continue;\
+			Font::setPixel##BPP(dst, x, y, col);\
+		}\
+	}\
+	else\
+	{\
+		if (y0 < _Y0(dst) || y0 >= _Y1(dst) || x0 < _X0(dst) || x0 >= _X1(dst))\
+			return;\
+		Font::setPixel##BPP(dst, x0, y0, col);\
+	}
 
 	RENDERALL();
 }
 
 void vline(SDL_Surface *dst, int x, int y0, int y1, uint32 col)
 {
-	if (x < 0 || x >= dst->w)
+	if (x < _X0(dst) || x >= _X1(dst))
 		return;
-	y0 = max(0, y0);
-	y1 = min(dst->h - 1, y1);
-	if (y0 < dst->h && y1 >= 0)
+	y0 = max<int>(_Y0(dst), y0);
+	y1 = min<int>(_Y1(dst) - 1, y1);
+	if (y0 < _Y1(dst) && y1 >= _Y0(dst))
 	{
 #undef RENDER
 #define RENDER(BPP)\
 		for(int y = y0 ; y <= y1 ; ++y)\
-				Font::setPixel##BPP(dst, x, y, col);
+			Font::setPixel##BPP(dst, x, y, col);
 		RENDERALL();
 	}
 }
 
 void hline(SDL_Surface *dst, int y, int x0, int x1, uint32 col)
 {
-	if (y < 0 || y >= dst->h || x1 < x0)
+	if (y < _Y0(dst) || y >= _Y1(dst) || x1 < x0)
 		return;
-	x0 = max(0, x0);
-	x1 = min(dst->w - 1, x1);
-	if (x0 < dst->w && x1 >= 0)
+	x0 = max<int>(_X0(dst), x0);
+	x1 = min<int>(_X1(dst) - 1, x1);
+	if (x0 < _X1(dst) && x1 >= _X0(dst))
 	{
 		byte *p = (byte*)dst->pixels + y * dst->pitch + x0 * dst->format->BytesPerPixel;
 		switch(dst->format->BytesPerPixel)
@@ -427,12 +467,12 @@ void arc(SDL_Surface *dst, int x, int y, int r, int start, int end, uint32 col)
 		const int dx = int(sqrt(float(r2 - _r * _r)) + 0.5f);
 #define DRAW_PIXEL(X, Y)\
 		{\
-		 const int _x = X;\
-						const int _y = Y;\
-									   if (sx * (_x - x) + sy * (_y - y) <= 0.0f\
-										   && ex * (_x - x) + ey * (_y - y) <= 0.0f)\
-									   putpixel(dst, _x, _y, col);\
-								   }
+			const int _x = X;\
+			const int _y = Y;\
+			if (sx * (_x - x) + sy * (_y - y) <= 0.0f\
+				&& ex * (_x - x) + ey * (_y - y) <= 0.0f)\
+				putpixel(dst, _x, _y, col);\
+		}
 
 		DRAW_PIXEL(x - dx, y - _r);
 		DRAW_PIXEL(x + dx, y - _r);
@@ -447,14 +487,14 @@ void arc(SDL_Surface *dst, int x, int y, int r, int start, int end, uint32 col)
 
 void putpixel(SDL_Surface *dst, int x, int y, uint32 col)
 {
-	if (x < 0 || x >= dst->w || y < 0 || y >= dst->h)
+	if (x < _X0(dst) || x >= _X1(dst) || y < _Y0(dst) || y >= _Y1(dst))
 		return;
 	Font::setPixel(dst, x, y, col);
 }
 
 uint32 getpixel(SDL_Surface *dst, int x, int y)
 {
-	if (x < 0 || x >= dst->w || y < 0 || y >= dst->h)
+	if (x < _X0(dst) || x >= _X1(dst) || y < _Y0(dst) || y >= _Y1(dst))
 		return 0;
 	return Font::getPixel(dst, x, y);
 }
@@ -497,10 +537,10 @@ void gradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, float dx, flo
 #define RENDER(BPP)\
 	for(int y = y0 ; y <= y1 ; ++y)\
 	{\
-		if (y < 0 || y >= dst->h)	continue;\
+		if (y < _Y0(dst) || y >= _Y1(dst))	continue;\
 		for(int x = x0 ; x <= x1 ; ++x)\
 		{\
-			if (x < 0 || x >= dst->w)	continue;\
+			if (x < _X0(dst) || x >= _X1(dst))	continue;\
 			const float d = (x - mx) * dx + (y - my) * dy;\
 			const int nr = clamp(int(r + d * dr), 0, 255);\
 			const int ng = clamp(int(g + d * dg), 0, 255);\
@@ -519,16 +559,16 @@ void roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int ra
 	Uint8 dr, dg, db, da;
 	SDL_GetRGBA(col, dst->format, &r, &g, &b, &a);
 	SDL_GetRGBA(dcol, dst->format, &dr, &dg, &db, &da);
-	const int bx0 = max(x0, 0);
-	const int bx1 = min(x1, dst->w - 1);
-	if (bx1 >= 0 && bx0 < dst->w)
+	const int bx0 = max<int>(x0, _X0(dst));
+	const int bx1 = min<int>(x1, _X1(dst) - 1);
+	if (bx1 >= _X0(dst) && bx0 < _X1(dst))
 	{
 		switch(dst->format->BytesPerPixel)
 		{
 		case 1:
 			for(int y = y0 + radius ; y <= y1 - radius ; ++y)
 			{
-				if (y < 0 || y >= dst->h)
+				if (y < _Y0(dst) || y >= _Y1(dst))
 					continue;
 				byte *p = (byte*)dst->pixels + y * dst->pitch + bx0 * 4;
 				if (dx == 0.0f)
@@ -553,7 +593,7 @@ void roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int ra
 		case 2:
 			for(int y = y0 + radius ; y <= y1 - radius ; ++y)
 			{
-				if (y < 0 || y >= dst->h)
+				if (y < _Y0(dst) || y >= _Y1(dst))
 					continue;
 				if (dx == 0.0f)
 				{
@@ -577,7 +617,7 @@ void roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int ra
 		case 3:
 			for(int y = y0 + radius ; y <= y1 - radius ; ++y)
 			{
-				if (y < 0 || y >= dst->h)
+				if (y < _Y0(dst) || y >= _Y1(dst))
 					continue;
 				if (dx == 0.0f)
 				{
@@ -609,7 +649,7 @@ void roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int ra
 			da = dcol >> 24;
 			for(int y = y0 + radius ; y <= y1 - radius ; ++y)
 			{
-				if (y < 0 || y >= dst->h)
+				if (y < _Y0(dst) || y >= _Y1(dst))
 					continue;
 				byte *p = (byte*)dst->pixels + y * dst->pitch + bx0 * 4;
 				if (dx == 0.0f)
@@ -788,11 +828,14 @@ void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1)
 {
 	SDL_PixelFormat *format = dst->format;
 	const int h = y1 - y0 + 1;
+	x0 = max<int>(x0, _X0(dst));
+	x1 = min<int>(x1, _X1(dst) - 1);
 	switch(format->BytesPerPixel)
 	{
 	case 1:
 		for(int y = y0 ; y <= y1 ; ++y)
 		{
+			if (y < _Y0(dst) || y >= _Y1(dst))	continue;
 			const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
 			const int iy = (h - y) * bkg;
 			byte *p = (byte*)dst->pixels + y * dst->pitch + x0;
@@ -819,6 +862,7 @@ void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1)
 	case 2:
 		for(int y = y0 ; y <= y1 ; ++y)
 		{
+			if (y < _Y0(dst) || y >= _Y1(dst))	continue;
 			const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
 			const int iy6 = (h - y) * bkg >> 2;
 			const int iy5 = (h - y) * bkg >> 3;
@@ -848,6 +892,7 @@ void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1)
 	case 3:
 		for(int y = y0 ; y <= y1 ; ++y)
 		{
+			if (y < _Y0(dst) || y >= _Y1(dst))	continue;
 			const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
 			const int iy = (h - y) * bkg;
 			byte *p = (byte*)dst->pixels + y * dst->pitch + x0 * 3;
@@ -870,6 +915,7 @@ void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1)
 	case 4:
 		for(int y = y0 ; y <= y1 ; ++y)
 		{
+			if (y < _Y0(dst) || y >= _Y1(dst))	continue;
 			const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
 			const int iy = (h - y) * bkg;
 			byte *p = (byte*)dst->pixels + y * dst->pitch + x0 * 4;

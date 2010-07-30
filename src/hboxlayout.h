@@ -12,6 +12,9 @@ public:
     HBoxLayout();
 	virtual ~HBoxLayout();
 
+	virtual int getOptimalWidth() const;
+	virtual int getOptimalHeight() const;
+
 protected:
 	virtual void operator ()();
 };

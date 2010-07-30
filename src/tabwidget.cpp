@@ -102,9 +102,8 @@ namespace Gui
 			vline(target, x1, 1 + y0 + r, y1 - r, darkgrey);
 			if (tabs[i].first.empty())
 				continue;
-			SDL_Surface *sub = createSubSurface(target, x0 + 8, y0 + 4, x1 - x0 - 17, 16);
-			Font::print(sub, (sub->w - tabs[i].first.size() * 8) / 2, 0, tabs[i].first, black);
-			SDL_FreeSurface(sub);
+			SDL_Surface sub = SubSurface(target, x0 + 8, y0 + 4, x1 - x0 - 17, 16);
+			Font::print(&sub, (sub.w - tabs[i].first.size() * 8) / 2, 0, tabs[i].first, black);
 		}
 		if (tabs.empty())
 			CurrentTab = 0;
@@ -137,9 +136,8 @@ namespace Gui
 		vline(target, x1, 1 + y0 + r, y1, darkgrey);
 		if (!tabs.empty() && !tabs[CurrentTab].first.empty())
 		{
-			SDL_Surface *sub = createSubSurface(target, x0 + 8, y0 + 4, x1 - x0 - 17, 16);
-			Font::print(sub, (sub->w - tabs[CurrentTab].first.size() * 8) / 2, 0, tabs[CurrentTab].first, black);
-			SDL_FreeSurface(sub);
+			SDL_Surface sub = SubSurface(target, x0 + 8, y0 + 4, x1 - x0 - 17, 16);
+			Font::print(&sub, (sub.w - tabs[CurrentTab].first.size() * 8) / 2, 0, tabs[CurrentTab].first, black);
 		}
 	}
 
@@ -224,9 +222,8 @@ namespace Gui
 		if (bRefreshChain && !tabs.empty()
 			&& (tabs[CurrentTab].second->bRefresh || tabs[CurrentTab].second->bRefreshChain))
 		{
-			SDL_Surface *sub = createSubSurface(target, tabs[CurrentTab].second->x, tabs[CurrentTab].second->y, tabs[CurrentTab].second->w, tabs[CurrentTab].second->h);
-			tabs[CurrentTab].second->paint(sub);
-			SDL_FreeSurface(sub);
+			SDL_Surface sub = SubSurface(target, tabs[CurrentTab].second->x, tabs[CurrentTab].second->y, tabs[CurrentTab].second->w, tabs[CurrentTab].second->h);
+			tabs[CurrentTab].second->paint(&sub);
 		}
 		bRefresh = false;
 		bRefreshChain = false;

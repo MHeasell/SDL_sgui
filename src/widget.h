@@ -21,6 +21,9 @@ namespace Gui
 		friend class Group;
 		friend class TabWidget;
 		friend class ScrollArea;
+		friend class Layout;
+		friend class HBoxLayout;
+		friend class VBoxLayout;
 	public:
 		enum Event { EVENT_NONE = 0,
 					 EVENT_REFRESH };

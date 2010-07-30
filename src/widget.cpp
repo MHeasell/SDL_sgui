@@ -37,6 +37,7 @@ Widget::~Widget()
 {
 	if (parent)
 		parent->remove(this);
+
 	set<Widget*> ch = childs;
 	for(set<Widget*>::const_iterator i = ch.begin() ; i != ch.end() ; ++i)
 	{
@@ -52,6 +53,9 @@ Widget::~Widget()
 			delete (*i);
 	}
 	listeners.clear();
+
+	if (layout)
+		delete layout;
 }
 
 void Widget::addChild(Widget *widget)
@@ -108,25 +112,13 @@ void Widget::paint(SDL_Surface *target)
 		{
 			if (!(*i)->bRefresh && !(*i)->bRefreshChain)
 				continue;
-			if ((*i)->x >= target->w
-				|| (*i)->y >= target->h
-				|| (*i)->x + (*i)->w <= 0
-				|| (*i)->y + (*i)->h <= 0)
+			if ((*i)->x >= target->clip_rect.x + target->clip_rect.w
+				|| (*i)->y >= target->clip_rect.y + target->clip_rect.h
+				|| (*i)->x + (*i)->w <= target->clip_rect.x
+				|| (*i)->y + (*i)->h <= target->clip_rect.y)
 				continue;
-			if ((*i)->x >= 0 && (*i)->y >= 0)
-			{
-				SDL_Surface *sub = createSubSurface(target, (*i)->x, (*i)->y, (*i)->w, (*i)->h);
-				(*i)->paint(sub);
-				SDL_FreeSurface(sub);
-			}
-			else
-			{
-				SDL_Surface *sub = createNativeSurface((*i)->w, (*i)->h);
-				blit(target, sub, (*i)->x, (*i)->y, 0, 0, (*i)->w, (*i)->h);
-				(*i)->paint(sub);
-				blit(sub, target, (*i)->x, (*i)->y);
-				SDL_FreeSurface(sub);
-			}
+			SDL_Surface sub = SubSurface(target, (*i)->x, (*i)->y, (*i)->w, (*i)->h);
+			(*i)->paint(&sub);
 		}
 	bRefresh = false;
 	bRefreshChain = false;
@@ -339,20 +331,24 @@ void Widget::loseFocus()					{}
 
 int Widget::getOptimalWidth() const
 {
+	if (layout)
+		return layout->getOptimalWidth();
 	if (childs.empty())
 		return this->w;
 	int w = 0;
-	for(set<Widget*>::iterator i = childs.begin() ; i != childs.end() ; ++i)
+	for(set<Widget*>::const_iterator i = childs.begin() ; i != childs.end() ; ++i)
 		w = max(w, (*i)->getX() + max(0, (*i)->getOptimalWidth()));
 	return w;
 }
 
 int Widget::getOptimalHeight() const
 {
+	if (layout)
+		return layout->getOptimalHeight();
 	if (childs.empty())
 		return this->h;
 	int h = 0;
-	for(set<Widget*>::iterator i = childs.begin() ; i != childs.end() ; ++i)
+	for(set<Widget*>::const_iterator i = childs.begin() ; i != childs.end() ; ++i)
 		h = max(h, (*i)->getY() + max(0, (*i)->getOptimalHeight()));
 	return h;
 }

@@ -45,8 +45,17 @@ int main(int argc, char *argv[])
 
 	TABWIDGET(tab)->addTab("Tab 3", Label_("label", "Ceci est un morceau de texte\nc'est tout à fait digeste\nc'est encodé en UTF-8\n\npourtant c'est affiché par des fonctions unicode \\o/"));
 
+	TABWIDGET(tab)->addTab("Tab 4", ScrollArea_("scroll"));
+
 	BUTTON(ok)->setCaption("   oké   ");
 	BUTTON(ok)->addListener(new QuitListener);
+
+	SCROLLAREA(scroll)->setCentralWidget(Button_("", "   o<   ")
+										 / Picture_("", IMG_Load("font.png"))
+										 / Picture_("", IMG_Load("font.png"))
+										 / Picture_("", IMG_Load("font.png"))
+										 / Picture_("", IMG_Load("font.png"))
+										 / Picture_("", IMG_Load("font.png")));
 
 	wnd();
 
