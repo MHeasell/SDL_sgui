@@ -32,6 +32,7 @@ namespace Gui
 
 	protected:
 		virtual void proc(Widget *widget);
+		virtual void mousePressEvent(SDL_Event *e);
 
 	protected:
 		Scrollbar *vscroll;

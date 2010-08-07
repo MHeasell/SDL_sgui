@@ -2,6 +2,7 @@
 #include "scrollbar.h"
 #include "frame.h"
 #include "unmanagedlayout.h"
+#include <SDL/SDL.h>
 
 using namespace std;
 
@@ -130,5 +131,27 @@ namespace Gui
 		vscroll->setValue(ShiftY);
 		ShiftY = vscroll->getValue();
 		getCentralWidget()->setPos(-ShiftX, -ShiftY);
+	}
+
+	void ScrollArea::mousePressEvent(SDL_Event *e)
+	{
+		switch(e->button.button)
+		{
+		case SDL_BUTTON_WHEELDOWN:
+		case SDL_BUTTON_WHEELUP:
+			const int ow = getCentralWidget()->getOptimalWidth() + 27;
+			const int oh = getCentralWidget()->getOptimalHeight() + 27;
+			vscroll->setMaximum(max<int>(0, oh - h));
+			hscroll->setMaximum(max<int>(0, ow - w));
+			vscroll->setPos(w - 17, 0);
+			vscroll->resize(16, h - 16);
+			hscroll->setPos(0, h - 17);
+			hscroll->resize(w - 16, 16);
+			vscroll->mousePressEvent(e);
+			ShiftX = hscroll->getValue();
+			ShiftY = vscroll->getValue();
+			getCentralWidget()->setPos(-ShiftX, -ShiftY);
+			break;
+		};
 	}
 }

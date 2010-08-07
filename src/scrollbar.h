@@ -9,6 +9,7 @@ namespace Gui
 	class Scrollbar : public Widget
 	{
 		friend class ListBox;
+		friend class ScrollArea;
 	public:
 		enum { Vertical = false, Horizontal = true };
 	public:

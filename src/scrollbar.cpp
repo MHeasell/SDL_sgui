@@ -103,117 +103,136 @@ namespace Gui
 
 	void Scrollbar::mousePressEvent(SDL_Event *e)
 	{
-		if (e->button.button != SDL_BUTTON_LEFT)
-			return;
+		switch(e->button.button)
+		{
+		case SDL_BUTTON_WHEELDOWN:
+			if (Value < Maximum)
+			{
+				Value = min<int>(Value + 10, Maximum);
+				emit();
+				refresh();
+			}
+			break;
+		case SDL_BUTTON_WHEELUP:
+			if (Value > Minimum)
+			{
+				Value = max<int>(Value - 10, Minimum);
+				emit();
+				refresh();
+			}
+			break;
+		case SDL_BUTTON_LEFT:
+			if (Orientation == Vertical)
+			{
+				if (e->button.y < 16)
+				{
+					if (highlight != 1)
+					{
+						highlight = 1;
+						refresh();
+					}
+					if (Value > Minimum)
+					{
+						--Value;
+						emit();
+						refresh();
+					}
+					return;
+				}
+				if (e->button.y >= h - 16)
+				{
+					if (highlight != 2)
+					{
+						highlight = 2;
+						refresh();
+					}
+					if (Value < Maximum)
+					{
+						++Value;
+						emit();
+						refresh();
+					}
+					return;
+				}
+				if (highlight)
+				{
+					highlight = 0;
+					refresh();
+				}
+				const float pos = float(Value - Minimum) / (Maximum - Minimum);
+				const int bh = min<int>(h - 32, max<int>(16, (h - 32) / (Maximum - Minimum + 1)));
+				const int rh = h - 32 - bh;
+				const int p = int(rh * pos + 0.5f);
+				if (e->button.y < p + 16 || e->button.y > p + 16 + bh)
+				{
+					if (h - 32 - bh == 0)
+						Value = Minimum;
+					else
+					{
+						Value = (e->button.y - 16) * (Maximum - Minimum) / (h - 32 - bh);
+						Value = clamp(Value, Minimum, Maximum);
+					}
+					emit();
+					refresh();
+				}
+			}
+			else
+			{
+				if (e->button.x < 16)
+				{
+					if (highlight != 1)
+					{
+						highlight = 1;
+						refresh();
+					}
+					if (Value > Minimum)
+					{
+						--Value;
+						emit();
+						refresh();
+					}
+					return;
+				}
+				if (e->button.x >= w - 16)
+				{
+					if (highlight != 2)
+					{
+						highlight = 2;
+						refresh();
+					}
+					if (Value < Maximum)
+					{
+						++Value;
+						emit();
+						refresh();
+					}
+					return;
+				}
+				if (highlight)
+				{
+					highlight = 0;
+					refresh();
+				}
+				const float pos = float(Value - Minimum) / (Maximum - Minimum);
+				const int bw = min<int>(w - 32, max<int>(16, (w - 32) / (Maximum - Minimum + 1)));
+				const int rw = w - 32 - bw;
+				const int p = int(rw * pos + 0.5f);
+				if (e->button.x < p + 16 || e->button.x > p + 16 + bw)
+				{
+					if (w - 32 - bw == 0)
+						Value = Minimum;
+					else
+					{
+						Value = (e->button.x - 16) * (Maximum - Minimum) / (w - 32 - bw);
+						Value = clamp(Value, Minimum, Maximum);
+					}
+					emit();
+					refresh();
+				}
+			}
+			break;
+		};
 
-		if (Orientation == Vertical)
-		{
-			if (e->button.y < 16)
-			{
-				if (highlight != 1)
-				{
-					highlight = 1;
-					refresh();
-				}
-				if (Value > Minimum)
-				{
-					--Value;
-					emit();
-					refresh();
-				}
-				return;
-			}
-			if (e->button.y >= h - 16)
-			{
-				if (highlight != 2)
-				{
-					highlight = 2;
-					refresh();
-				}
-				if (Value < Maximum)
-				{
-					++Value;
-					emit();
-					refresh();
-				}
-				return;
-			}
-			if (highlight)
-			{
-				highlight = 0;
-				refresh();
-			}
-			const float pos = float(Value - Minimum) / (Maximum - Minimum);
-			const int bh = min<int>(h - 32, max<int>(16, (h - 32) / (Maximum - Minimum + 1)));
-			const int rh = h - 32 - bh;
-			const int p = int(rh * pos + 0.5f);
-			if (e->button.y < p + 16 || e->button.y > p + 16 + bh)
-			{
-				if (h - 32 - bh == 0)
-					Value = Minimum;
-				else
-				{
-					Value = (e->button.y - 16) * (Maximum - Minimum) / (h - 32 - bh);
-					Value = clamp(Value, Minimum, Maximum);
-				}
-				emit();
-				refresh();
-			}
-		}
-		else
-		{
-			if (e->button.x < 16)
-			{
-				if (highlight != 1)
-				{
-					highlight = 1;
-					refresh();
-				}
-				if (Value > Minimum)
-				{
-					--Value;
-					emit();
-					refresh();
-				}
-				return;
-			}
-			if (e->button.x >= w - 16)
-			{
-				if (highlight != 2)
-				{
-					highlight = 2;
-					refresh();
-				}
-				if (Value < Maximum)
-				{
-					++Value;
-					emit();
-					refresh();
-				}
-				return;
-			}
-			if (highlight)
-			{
-				highlight = 0;
-				refresh();
-			}
-			const float pos = float(Value - Minimum) / (Maximum - Minimum);
-			const int bw = min<int>(w - 32, max<int>(16, (w - 32) / (Maximum - Minimum + 1)));
-			const int rw = w - 32 - bw;
-			const int p = int(rw * pos + 0.5f);
-			if (e->button.x < p + 16 || e->button.x > p + 16 + bw)
-			{
-				if (w - 32 - bw == 0)
-					Value = Minimum;
-				else
-				{
-					Value = (e->button.x - 16) * (Maximum - Minimum) / (w - 32 - bw);
-					Value = clamp(Value, Minimum, Maximum);
-				}
-				emit();
-				refresh();
-			}
-		}
 	}
 
 	void Scrollbar::mouseMoveEvent(SDL_Event *e)
