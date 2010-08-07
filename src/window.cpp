@@ -23,6 +23,7 @@ namespace Gui
 		layoutUpdateInProgress = false;
 		resize(w, h);
 		Widget::addChild(middle);
+		setLayout(new VBoxLayout);
 	}
 
 	Window::~Window()
@@ -128,6 +129,9 @@ namespace Gui
 					flip();
 					refreshInProgress = false;
 					break;
+				case EVENT_CLOSE:
+					SDL_SetVideoMode(0,0,0,0);
+					return;
 				};
 				break;
 

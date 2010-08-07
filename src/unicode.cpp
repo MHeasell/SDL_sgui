@@ -59,4 +59,8 @@ namespace Gui
 		return wstr;
 	}
 
+	ostream &operator<<(ostream &out, const ustring &str)
+	{
+		return (out << toUtf8(str));
+	}
 }

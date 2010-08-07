@@ -34,4 +34,6 @@
 
 #include "unicode.h"
 
+#include "utils.h"
+
 #endif // SDL_SGUI_H

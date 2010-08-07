@@ -28,7 +28,8 @@ namespace Gui
 		friend class Window;
 	public:
 		enum Event { EVENT_NONE = 0,
-					 EVENT_REFRESH };
+					 EVENT_REFRESH,
+					 EVENT_CLOSE};
 	public:
 		Widget(const ustring &Name, Widget *parent = NULL);
 		virtual ~Widget();

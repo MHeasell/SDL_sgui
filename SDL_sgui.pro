@@ -37,7 +37,8 @@ SOURCES += src/main.cpp \
     src/menubar.cpp \
     src/menu.cpp \
     src/floatting.cpp \
-    src/menuentry.cpp
+    src/menuentry.cpp \
+    src/utils.cpp
 LIBS += -lSDL \
     -lSDL_image
 HEADERS += src/widget.h \
@@ -74,7 +75,8 @@ HEADERS += src/widget.h \
     src/menubar.h \
     src/menu.h \
     src/floatting.h \
-    src/menuentry.h
+    src/menuentry.h \
+    src/utils.h
 QMAKE_CXXFLAGS_DEBUG += -p \
     -O0
 QMAKE_LFLAGS_DEBUG += -p

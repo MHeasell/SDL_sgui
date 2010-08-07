@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTTHREAD | SDL_INIT_TIMER);
 
+	cout << Utils::input("question", "oui ou non ? Ceci est une question vitale alors répond\net pose pas de questions!") << endl;
+	return 0;
+
 	Window wnd("window", 800, 600, Window::RESIZEABLE);
 	wnd.setTitle("Hello World!");
 	wnd.setLayout(new HBoxLayout);

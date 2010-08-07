@@ -2,6 +2,7 @@
 #define UNICODE_H
 
 #include <string>
+#include <ostream>
 
 namespace Gui
 {
@@ -21,7 +22,11 @@ namespace Gui
 
 		operator std::string() const {	return toUtf8(*this);	}
 		operator std::wstring() const {	return *this;	}
+
+		std::string toUft8() const {	return toUtf8(*this);	}
 	};
+
+	std::ostream &operator<<(std::ostream &out, const ustring &str);
 }
 
 #endif // UNICODE_H
