@@ -52,6 +52,7 @@ namespace Gui
 
 	private:
 		void setSDLVideo();
+		void flip();
 
 	public:
 		void operator()();

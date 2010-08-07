@@ -89,7 +89,7 @@ namespace Gui
 						setSDLVideo();
 						screen = SDL_GetVideoSurface();
 						blit(tmp, screen, 0, 0);
-						SDL_Flip(screen);
+						flip();
 						SDL_FreeSurface(tmp);
 					}
 					else
@@ -102,7 +102,7 @@ namespace Gui
 				break;
 
 			case SDL_VIDEOEXPOSE:		/**< Screen needs to be redrawn */
-				SDL_Flip(SDL_GetVideoSurface());
+				flip();
 				break;
 			case SDL_ACTIVEEVENT:		/**< Application loses/gains visibility */
 				if (e.active.state == SDL_APPMOUSEFOCUS)
@@ -111,7 +111,7 @@ namespace Gui
 						takeFocus();
 				}
 				if (e.active.state == SDL_APPACTIVE && e.active.gain)
-					SDL_Flip(SDL_GetVideoSurface());
+					flip();
 				break;
 
 			case SDL_QUIT:				/**< User-requested quit */
@@ -125,7 +125,7 @@ namespace Gui
 				{
 				case EVENT_REFRESH:
 					paint(SDL_GetVideoSurface());
-					SDL_Flip(SDL_GetVideoSurface());
+					flip();
 					refreshInProgress = false;
 					break;
 				};
@@ -182,6 +182,11 @@ namespace Gui
 			return;
 		flags ^= FULLSCREEN;
 		setSDLVideo();
+	}
+
+	void Window::flip()
+	{
+		SDL_Flip(SDL_GetVideoSurface());
 	}
 
 	void Window::setSDLVideo()
