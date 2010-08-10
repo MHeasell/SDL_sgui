@@ -713,7 +713,7 @@ namespace Gui
 
 	void initCursors()
 	{
-		if (cursor_arrow)
+		if (cursor_arrow || SDL_GetVideoSurface() == NULL)
 			return;
 
 		static const char *arrow =

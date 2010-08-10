@@ -4,7 +4,7 @@ namespace Gui
 {
 	void Utils::message(const ustring &title, const ustring &msg)
 	{
-		setenv("SDL_VIDEO_CENTERED", "1", 1);
+		putenv("SDL_VIDEO_CENTERED=1");
 		Window wnd("", 640, 240, Window::MOVEABLE | Window::RESIZEABLE);
 		wnd.setTitle(title);
 		Label *label = new Label("", msg);
@@ -14,12 +14,12 @@ namespace Gui
 		button->addListener(actionCloseWindow());
 		wnd.resize(wnd.getOptimalWidth() + 32, wnd.getOptimalHeight() + 16);
 		wnd();
-		setenv("SDL_VIDEO_CENTERED", "0", 1);
+		putenv("SDL_VIDEO_CENTERED=0");
 	}
 
 	ustring Utils::input(const ustring &title, const ustring &msg)
 	{
-		setenv("SDL_VIDEO_CENTERED", "1", 1);
+		putenv("SDL_VIDEO_CENTERED=1");
 		Window wnd("", 640, 240, Window::MOVEABLE | Window::RESIZEABLE);
 		wnd.setTitle(title);
 		Label *label = new Label("", msg);
@@ -31,13 +31,13 @@ namespace Gui
 		input->addListener(actionCloseWindow());
 		wnd.resize(wnd.getOptimalWidth() + 32, wnd.getOptimalHeight() + 16);
 		wnd();
-		setenv("SDL_VIDEO_CENTERED", "0", 1);
+		putenv("SDL_VIDEO_CENTERED=0");
 		return input->getText();
 	}
 
 	bool Utils::ask(const ustring &title, const ustring &msg)
 	{
-		setenv("SDL_VIDEO_CENTERED", "1", 1);
+		putenv("SDL_VIDEO_CENTERED=1");
 		bool bOk = false;
 
 		Window wnd("", 320, 60, Window::MOVEABLE | Window::RESIZEABLE);
@@ -52,7 +52,7 @@ namespace Gui
 		cancel->addListener(actionCloseWindow());
 		wnd.resize(wnd.getOptimalWidth() + 32, wnd.getOptimalHeight() + 16);
 		wnd();
-		setenv("SDL_VIDEO_CENTERED", "0", 1);
+		putenv("SDL_VIDEO_CENTERED=0");
 		return bOk;
 	}
 

@@ -39,6 +39,7 @@ SOURCES += src/main.cpp \
     src/floatting.cpp \
     src/menuentry.cpp \
     src/utils.cpp
+win32:LIBS = -lmingw32 -lSDLmain
 LIBS += -lSDL \
     -lSDL_image
 HEADERS += src/widget.h \
@@ -77,9 +78,7 @@ HEADERS += src/widget.h \
     src/floatting.h \
     src/menuentry.h \
     src/utils.h
-QMAKE_CXXFLAGS_DEBUG += -p \
-    -O0
-QMAKE_LFLAGS_DEBUG += -p
+QMAKE_CXXFLAGS_DEBUG += -O0
 QMAKE_CXXFLAGS_RELEASE = -Os \
     -march=native \
     -mtune=native

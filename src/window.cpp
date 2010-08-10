@@ -5,6 +5,7 @@
 #include "vboxlayout.h"
 #include "floatting.h"
 #include <SDL/SDL.h>
+#include <SDL/SDL_getenv.h>
 
 using namespace std;
 
