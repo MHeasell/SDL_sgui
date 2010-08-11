@@ -785,6 +785,8 @@ namespace Gui
 				"                                "
 				"                                ";
 		cursor_edit = loadCursor(edit, 5, 7);
+
+		SDL_SetCursor(cursor_arrow);
 	}
 
 	SDL_Cursor *loadCursor(const char *image, int hot_x, int hot_y)
