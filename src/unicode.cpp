@@ -1,4 +1,4 @@
-#include "unicode.h"
+#include <SDL/sgui/unicode.h>
 
 using namespace std;
 

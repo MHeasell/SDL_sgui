@@ -1,9 +1,9 @@
-#include "menubar.h"
-#include "window.h"
-#include "menu.h"
-#include "renderapi.h"
-#include "layout.h"
-#include "font.h"
+#include <SDL/sgui/menubar.h>
+#include <SDL/sgui/window.h>
+#include <SDL/sgui/menu.h>
+#include <SDL/sgui/renderapi.h>
+#include <SDL/sgui/layout.h>
+#include <SDL/sgui/font.h>
 #include <algorithm>
 
 using namespace std;

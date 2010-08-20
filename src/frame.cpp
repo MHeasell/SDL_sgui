@@ -1,5 +1,5 @@
-#include "frame.h"
-#include "renderapi.h"
+#include <SDL/sgui/frame.h>
+#include <SDL/sgui/renderapi.h>
 
 using namespace std;
 

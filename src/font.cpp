@@ -1,6 +1,6 @@
-#include "font.h"
+#include <SDL/sgui/font.h>
 #include "fontdata.h"
-#include "renderapi.h"
+#include <SDL/sgui/renderapi.h>
 
 #define _X0(surface)	((surface)->clip_rect.x)
 #define _Y0(surface)	((surface)->clip_rect.y)

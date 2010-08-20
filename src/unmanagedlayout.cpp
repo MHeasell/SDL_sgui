@@ -1,5 +1,5 @@
-#include "unmanagedlayout.h"
-#include "widget.h"
+#include <SDL/sgui/unmanagedlayout.h>
+#include <SDL/sgui/widget.h>
 #include <vector>
 #include <utility>
 

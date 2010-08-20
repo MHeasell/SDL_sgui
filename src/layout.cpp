@@ -1,5 +1,5 @@
-#include "layout.h"
-#include "widget.h"
+#include <SDL/sgui/layout.h>
+#include <SDL/sgui/widget.h>
 #include <vector>
 #include <algorithm>
 #include <typeinfo>

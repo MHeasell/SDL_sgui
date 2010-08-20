@@ -1,6 +1,6 @@
-#include "picture.h"
+#include <SDL/sgui/picture.h>
 #include <SDL/SDL.h>
-#include "renderapi.h"
+#include <SDL/sgui/renderapi.h>
 
 namespace Gui
 {

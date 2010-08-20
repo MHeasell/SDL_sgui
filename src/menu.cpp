@@ -1,9 +1,9 @@
-#include "menu.h"
-#include "menuentry.h"
-#include "window.h"
-#include "font.h"
-#include "renderapi.h"
-#include "vboxlayout.h"
+#include <SDL/sgui/menu.h>
+#include <SDL/sgui/menuentry.h>
+#include <SDL/sgui/window.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
+#include <SDL/sgui/vboxlayout.h>
 
 using namespace std;
 

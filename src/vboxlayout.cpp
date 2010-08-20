@@ -1,5 +1,5 @@
-#include "vboxlayout.h"
-#include "widget.h"
+#include <SDL/sgui/vboxlayout.h>
+#include <SDL/sgui/widget.h>
 #include <vector>
 #include <algorithm>
 #include <typeinfo>

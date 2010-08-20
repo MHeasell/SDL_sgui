@@ -1,6 +1,6 @@
-#include "group.h"
-#include "font.h"
-#include "renderapi.h"
+#include <SDL/sgui/group.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
 #include <queue>
 #include <SDL/SDL.h>
 

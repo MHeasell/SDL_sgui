@@ -1,7 +1,7 @@
-#include "listbox.h"
-#include "frame.h"
-#include "font.h"
-#include "renderapi.h"
+#include <SDL/sgui/listbox.h>
+#include <SDL/sgui/frame.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
 #include <SDL/SDL.h>
 
 using namespace std;

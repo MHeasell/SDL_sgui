@@ -1,6 +1,6 @@
-#include "button.h"
-#include "font.h"
-#include "renderapi.h"
+#include <SDL/sgui/button.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
 #include <SDL/SDL.h>
 
 namespace Gui

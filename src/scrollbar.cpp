@@ -1,8 +1,8 @@
-#include "scrollbar.h"
+#include <SDL/sgui/scrollbar.h>
 #include <SDL/SDL.h>
 #include "arrowdata.h"
-#include "font.h"
-#include "renderapi.h"
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
 
 using namespace std;
 

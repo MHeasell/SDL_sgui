@@ -1,8 +1,8 @@
-#include "menuentry.h"
-#include "menu.h"
-#include "font.h"
-#include "window.h"
-#include "renderapi.h"
+#include <SDL/sgui/menuentry.h>
+#include <SDL/sgui/menu.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/window.h>
+#include <SDL/sgui/renderapi.h>
 
 using namespace std;
 

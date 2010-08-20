@@ -1,4 +1,4 @@
-#include "spacer.h"
+#include <SDL/sgui/spacer.h>
 
 namespace Gui
 {

@@ -2,44 +2,45 @@ cmake_minimum_required (VERSION 2.6)
 project (SDL_sgui)
 
 SET(SOURCES
-	src/SDL_sgui.h
-	src/types.h
+	include/SDL/SDL_sgui.h
+	include/SDL/sgui/types.h
 	src/arrowdata.h
 	src/checkdata.h
 	src/fontdata.h
 
-	src/button.cpp		src/button.h
-	src/checkbox.cpp	src/checkbox.h
-	src/floatting.cpp	src/floatting.h
-	src/font.cpp		src/font.h
-	src/frame.cpp		src/frame.h
-	src/group.cpp		src/group.h
-	src/hboxlayout.cpp	src/hboxlayout.h
-	src/label.cpp 		src/label.h
-	src/layout.cpp		src/layout.h
-	src/lineinput.cpp	src/lineinput.h
-	src/listbox.cpp		src/listbox.h
-	src/menubar.cpp		src/menubar.h
-	src/menu.cpp		src/menu.h
-	src/menuentry.cpp	src/menuentry.h     
-	src/picture.cpp		src/picture.h
-	src/progressbar.cpp	src/progressbar.h
-	src/radiobutton.cpp	src/radiobutton.h
-	src/receiver.cpp	src/receiver.h
-	src/renderapi.cpp	src/renderapi.h
-	src/scrollarea.cpp	src/scrollarea.h
-	src/scrollbar.cpp	src/scrollbar.h
-	src/spacer.cpp		src/spacer.h
-	src/spinbox.cpp		src/spinbox.h
-	src/tabwidget.cpp	src/tabwidget.h
-	src/textedit.cpp	src/textedit.h
-	src/unicode.cpp		src/unicode.h
-	src/unmanagedlayout.cpp	src/unmanagedlayout.h
-	src/utils.cpp		src/utils.h
-	src/vboxlayout.cpp	src/vboxlayout.h
-	src/widget.cpp		src/widget.h
-	src/window.cpp		src/window.h)
+	src/button.cpp			include/SDL/sgui/button.h
+	src/checkbox.cpp		include/SDL/sgui/checkbox.h
+	src/floatting.cpp		include/SDL/sgui/floatting.h
+	src/font.cpp			include/SDL/sgui/font.h
+	src/frame.cpp			include/SDL/sgui/frame.h
+	src/group.cpp			include/SDL/sgui/group.h
+	src/hboxlayout.cpp		include/SDL/sgui/hboxlayout.h
+	src/label.cpp			include/SDL/sgui/label.h
+	src/layout.cpp			include/SDL/sgui/layout.h
+	src/lineinput.cpp		include/SDL/sgui/lineinput.h
+	src/listbox.cpp			include/SDL/sgui/listbox.h
+	src/menubar.cpp			include/SDL/sgui/menubar.h
+	src/menu.cpp			include/SDL/sgui/menu.h
+	src/menuentry.cpp		include/SDL/sgui/menuentry.h
+	src/picture.cpp			include/SDL/sgui/picture.h
+	src/progressbar.cpp		include/SDL/sgui/progressbar.h
+	src/radiobutton.cpp		include/SDL/sgui/radiobutton.h
+	src/receiver.cpp		include/SDL/sgui/receiver.h
+	src/renderapi.cpp		include/SDL/sgui/renderapi.h
+	src/scrollarea.cpp		include/SDL/sgui/scrollarea.h
+	src/scrollbar.cpp		include/SDL/sgui/scrollbar.h
+	src/spacer.cpp			include/SDL/sgui/spacer.h
+	src/spinbox.cpp			include/SDL/sgui/spinbox.h
+	src/tabwidget.cpp		include/SDL/sgui/tabwidget.h
+	src/textedit.cpp		include/SDL/sgui/textedit.h
+	src/unicode.cpp			include/SDL/sgui/unicode.h
+	src/unmanagedlayout.cpp	include/SDL/sgui/unmanagedlayout.h
+	src/utils.cpp			include/SDL/sgui/utils.h
+	src/vboxlayout.cpp		include/SDL/sgui/vboxlayout.h
+	src/widget.cpp			include/SDL/sgui/widget.h
+	src/window.cpp			include/SDL/sgui/window.h)
 
 SET(CMAKE_CXX_FLAGS_RELEASE -Os)
 
+include_directories(include)
 add_library(SDL_sgui ${SOURCES})

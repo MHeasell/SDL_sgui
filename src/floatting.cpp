@@ -1,5 +1,5 @@
-#include "floatting.h"
-#include "window.h"
+#include <SDL/sgui/floatting.h>
+#include <SDL/sgui/window.h>
 
 namespace Gui
 {

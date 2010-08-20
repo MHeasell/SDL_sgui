@@ -1,6 +1,6 @@
-#include "radiobutton.h"
-#include "font.h"
-#include "renderapi.h"
+#include <SDL/sgui/radiobutton.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
 #include <SDL/SDL.h>
 
 using namespace std;

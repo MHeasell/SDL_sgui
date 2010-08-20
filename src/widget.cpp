@@ -1,8 +1,8 @@
-#include "widget.h"
-#include "layout.h"
-#include "font.h"
-#include "receiver.h"
-#include "renderapi.h"
+#include <SDL/sgui/widget.h>
+#include <SDL/sgui/layout.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/receiver.h>
+#include <SDL/sgui/renderapi.h>
 #include <SDL/SDL.h>
 #include <queue>
 #include <cmath>

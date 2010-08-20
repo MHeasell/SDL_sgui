@@ -1,5 +1,5 @@
-#include "receiver.h"
-#include "widget.h"
+#include <SDL/sgui/receiver.h>
+#include <SDL/sgui/widget.h>
 
 using namespace std;
 

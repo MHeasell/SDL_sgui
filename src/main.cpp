@@ -1,6 +1,6 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include "SDL_sgui.h"
+#include <SDL/SDL_sgui.h>
 
 #include <iostream>
 using namespace std;

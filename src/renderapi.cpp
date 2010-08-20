@@ -1,5 +1,5 @@
-#include "renderapi.h"
-#include "font.h"
+#include <SDL/sgui/renderapi.h>
+#include <SDL/sgui/font.h>
 #include <SDL/SDL.h>
 #include <cmath>
 

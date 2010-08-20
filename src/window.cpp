@@ -1,9 +1,9 @@
-#include "window.h"
-#include "renderapi.h"
-#include "menubar.h"
-#include "menu.h"
-#include "vboxlayout.h"
-#include "floatting.h"
+#include <SDL/sgui/window.h>
+#include <SDL/sgui/renderapi.h>
+#include <SDL/sgui/menubar.h>
+#include <SDL/sgui/menu.h>
+#include <SDL/sgui/vboxlayout.h>
+#include <SDL/sgui/floatting.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_getenv.h>
 

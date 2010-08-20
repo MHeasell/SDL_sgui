@@ -1,6 +1,6 @@
-#include "label.h"
-#include "font.h"
-#include "renderapi.h"
+#include <SDL/sgui/label.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
 
 using namespace std;
 

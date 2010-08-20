@@ -1,6 +1,6 @@
-#include "spinbox.h"
-#include "font.h"
-#include "renderapi.h"
+#include <SDL/sgui/spinbox.h>
+#include <SDL/sgui/font.h>
+#include <SDL/sgui/renderapi.h>
 #include <sstream>
 #include <iomanip>
 #include "arrowdata.h"
