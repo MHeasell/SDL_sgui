@@ -151,8 +151,9 @@ namespace Gui
 			highlight = 0;
 			refresh();
 		}
-		if (e->button.button == SDL_BUTTON_LEFT)
+		switch (e->button.button)
 		{
+		case SDL_BUTTON_LEFT:
 			switch(highlight)
 			{
 			case 1:
@@ -165,8 +166,29 @@ namespace Gui
 				emit();
 				refresh();
 				break;
+			};
+			break;
+		case SDL_BUTTON_WHEELDOWN:
+			if (e->button.x < w - 16 && e->button.x >= 2
+				&& e->button.y >= 2 && e->button.y <= h - 2
+				&& Value > Minimum)
+			{
+				Value = clamp(Value - Step, Minimum, Maximum);
+				emit();
+				refresh();
 			}
-		}
+			break;
+		case SDL_BUTTON_WHEELUP:
+			if (e->button.x < w - 16 && e->button.x >= 2
+				&& e->button.y >= 2 && e->button.y <= h - 2
+				&& Value < Maximum)
+			{
+				Value = clamp(Value + Step, Minimum, Maximum);
+				emit();
+				refresh();
+			}
+			break;
+		};
 	}
 
 	void SpinBox::mouseMoveEvent(SDL_Event *e)
