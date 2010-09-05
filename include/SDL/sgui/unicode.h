@@ -16,14 +16,14 @@ namespace Gui
 	public:
 		ustring()	{}
 		ustring(const std::string &s) : std::wstring(fromUtf8(s))	{}
-		ustring(const char *s) : std::wstring(fromUtf8(s))	{}
+		ustring(const char *s) : std::wstring(s ? fromUtf8(s) : L"")	{}
 		ustring(const std::wstring &s) : std::wstring(s)	{}
-		ustring(const wchar_t *s) : std::wstring(s)	{}
+		ustring(const wchar_t *s) : std::wstring(s ? s : L"")	{}
 
-		operator std::string() const {	return toUtf8(*this);	}
+		operator std::string() const {	return Gui::toUtf8(*this);	}
 		operator std::wstring() const {	return *this;	}
 
-		std::string toUft8() const {	return toUtf8(*this);	}
+		std::string toUtf8() const {	return Gui::toUtf8(*this);	}
 	};
 
 	std::ostream &operator<<(std::ostream &out, const ustring &str);
