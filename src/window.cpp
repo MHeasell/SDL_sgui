@@ -207,6 +207,7 @@ namespace Gui
 		SDL_EnableUNICODE(SDL_ENABLE);
 		SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 		SDL_SetCursor(cursor_arrow);
+		SDL_ShowCursor(SDL_ENABLE);
 		updateGUIColors();
 		updateLayout();
 	}
