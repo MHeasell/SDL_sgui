@@ -4,55 +4,58 @@ namespace Gui
 {
 	void Utils::message(const ustring &title, const ustring &msg)
 	{
-		putenv((char*)"SDL_VIDEO_CENTERED=1");
-		Window wnd("", 640, 240, Window::MOVEABLE | Window::RESIZEABLE);
-		wnd.setTitle(title);
 		Label *label = new Label("", msg);
 		Button *button = new Button("", "  ok  ");
-		wnd.addChild(Spacer_(true)/ *label / Spacer_(true) / (Spacer_(false) | *button | Spacer_(false)) / Spacer_(true));
 		label->setAlignment(Label::CENTER);
 		button->addListener(actionCloseWindow());
-		wnd.resize(wnd.getOptimalWidth() + 32, wnd.getOptimalHeight() + 16);
+
+		Widget &center = Spacer_(true)/ *label / Spacer_(true) / (Spacer_(false) | *button | Spacer_(false)) / Spacer_(true);
+
+		putenv((char*)"SDL_VIDEO_CENTERED=1");
+		Window wnd("", std::max(320, center.getOptimalWidth() + 32), center.getOptimalHeight() + 16, Window::MOVEABLE);
+		wnd.addChild(center);
+		wnd.setTitle(title);
 		wnd();
-		putenv((char*)"SDL_VIDEO_CENTERED=0");
 	}
 
 	ustring Utils::input(const ustring &title, const ustring &msg)
 	{
-		putenv((char*)"SDL_VIDEO_CENTERED=1");
-		Window wnd("", 640, 240, Window::MOVEABLE | Window::RESIZEABLE);
-		wnd.setTitle(title);
 		Label *label = new Label("", msg);
 		Button *button = new Button("", "  ok  ");
 		LineInput *input = new LineInput("");
-		wnd.addChild(Spacer_(true) / *label / Spacer_(true) / *input / Spacer_(true) / (Spacer_(false) | *button | Spacer_(false)) / Spacer_(true));
 		label->setAlignment(Label::CENTER);
 		button->addListener(actionCloseWindow());
 		input->addListener(actionCloseWindow());
-		wnd.resize(wnd.getOptimalWidth() + 32, wnd.getOptimalHeight() + 16);
+
+		Widget &center = Spacer_(true) / *label / Spacer_(true) / *input / Spacer_(true) / (Spacer_(false) | *button | Spacer_(false)) / Spacer_(true);
+
+		putenv((char*)"SDL_VIDEO_CENTERED=1");
+		Window wnd("", std::max<int>(320, center.getOptimalWidth() + 32), center.getOptimalHeight() + 16, Window::MOVEABLE);
+		wnd.addChild(center);
+		wnd.setTitle(title);
 		wnd();
-		putenv((char*)"SDL_VIDEO_CENTERED=0");
 		return input->getText();
 	}
 
 	bool Utils::ask(const ustring &title, const ustring &msg)
 	{
-		putenv((char*)"SDL_VIDEO_CENTERED=1");
 		bool bOk = false;
 
-		Window wnd("", 320, 60, Window::MOVEABLE | Window::RESIZEABLE);
-		wnd.setTitle(title);
 		Label *label = new Label("", msg);
 		Button *ok = new Button("", "    ok    ");
 		Button *cancel = new Button("", "  cancel  ");
-		wnd.addChild(Spacer_(true) / *label / Spacer_(true) / (Spacer_(false) | *ok | Spacer_(false) | *cancel | Spacer_(false)) / Spacer_(true));
 		label->setAlignment(Label::CENTER);
 		ok->addListener(actionCloseWindow());
 		ok->addListener(actionSetBool(bOk));
 		cancel->addListener(actionCloseWindow());
-		wnd.resize(wnd.getOptimalWidth() + 32, wnd.getOptimalHeight() + 16);
+
+		Widget &center = Spacer_(true) / *label / Spacer_(true) / (Spacer_(false) | *ok | Spacer_(false) | *cancel | Spacer_(false)) / Spacer_(true);
+
+		putenv((char*)"SDL_VIDEO_CENTERED=1");
+		Window wnd("", std::max(320, center.getOptimalWidth() + 32), center.getOptimalHeight() + 16, Window::MOVEABLE);
+		wnd.addChild(center);
+		wnd.setTitle(title);
 		wnd();
-		putenv((char*)"SDL_VIDEO_CENTERED=0");
 		return bOk;
 	}
 
