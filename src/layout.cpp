@@ -1,3 +1,5 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/layout.h>
 #include <SDL/sgui/widget.h>
 #include <vector>

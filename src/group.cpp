@@ -1,8 +1,9 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/group.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
 #include <queue>
-#include <SDL/SDL.h>
 
 using namespace std;
 

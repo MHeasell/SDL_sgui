@@ -1,6 +1,15 @@
 cmake_minimum_required (VERSION 2.6)
 project (SDL_sgui)
 
+include(FindSDL)
+if(NOT SDL_FOUND)
+	message(FATAL_ERROR "SDL not found, SDL is required")
+endif()
+message(STATUS "[sdl] include: ${SDL_INCLUDE_DIR}")
+message(STATUS "[sdl] libs   : ${SDL_LIBRARY}")
+LINK_LIBRARIES(${SDL_LIBRARY})
+INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
+
 SET(SOURCES
 	include/SDL/SDL_sgui.h
 	include/SDL/sgui/types.h
@@ -8,6 +17,7 @@ SET(SOURCES
 	src/checkdata.h
 	src/fontdata.h
 
+	src/types.cpp
 	src/button.cpp			include/SDL/sgui/button.h
 	src/checkbox.cpp		include/SDL/sgui/checkbox.h
 	src/floatting.cpp		include/SDL/sgui/floatting.h

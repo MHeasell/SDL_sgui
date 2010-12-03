@@ -1,7 +1,10 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/frame.h>
 #include <SDL/sgui/renderapi.h>
 
 using namespace std;
+
 
 namespace Gui
 {

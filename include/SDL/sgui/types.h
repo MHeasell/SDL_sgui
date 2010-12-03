@@ -1,5 +1,5 @@
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef SGUI_TYPES_H
+#define SGUI_TYPES_H
 
 #include <utility>
 
@@ -16,8 +16,9 @@ namespace Gui
 	typedef void (*CallbackFunction)(uint32);
 	typedef std::pair<CallbackFunction, uint32> CallbackType;
 
-#define NoCallback	std::make_pair<CallbackFunction, uint32>(NULL, 0)
 #define MkCallback(fn, param) std::make_pair<CallbackFunction, uint32>(fn, param)
+
+	extern CallbackType  NoCallback;
 
 	template<class T>
 	inline T clamp(const T &v, const T &m, const T &M)
@@ -26,4 +27,4 @@ namespace Gui
 	}
 }
 
-#endif // TYPES_H
+#endif // SGUI_TYPES_H

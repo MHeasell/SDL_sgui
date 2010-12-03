@@ -3,7 +3,7 @@
 
 #include <map>
 #include <string>
-#include <SDL/SDL.h>
+#include "sdl-headers.h"
 
 namespace Gui
 {

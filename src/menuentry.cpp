@@ -1,3 +1,5 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/menuentry.h>
 #include <SDL/sgui/menu.h>
 #include <SDL/sgui/font.h>

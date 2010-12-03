@@ -1,7 +1,8 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/lineinput.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
-#include <SDL/SDL.h>
 
 using namespace std;
 

@@ -1,3 +1,5 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/unicode.h>
 
 using namespace std;

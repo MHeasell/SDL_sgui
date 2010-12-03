@@ -1,9 +1,11 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/widget.h>
 #include <SDL/sgui/layout.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/receiver.h>
 #include <SDL/sgui/renderapi.h>
-#include <SDL/SDL.h>
+#include <SDL/sgui/sdl-headers.h>
 #include <queue>
 #include <cmath>
 

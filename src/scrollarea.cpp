@@ -1,8 +1,10 @@
+
+#include <SDL/sgui/sdl-headers.h>
+#include <SDL/sgui/scrollarea.h>
 #include <SDL/sgui/scrollarea.h>
 #include <SDL/sgui/scrollbar.h>
 #include <SDL/sgui/frame.h>
 #include <SDL/sgui/unmanagedlayout.h>
-#include <SDL/SDL.h>
 
 using namespace std;
 

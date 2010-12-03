@@ -1,11 +1,18 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/window.h>
 #include <SDL/sgui/renderapi.h>
 #include <SDL/sgui/menubar.h>
 #include <SDL/sgui/menu.h>
 #include <SDL/sgui/vboxlayout.h>
 #include <SDL/sgui/floatting.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_getenv.h>
+#include <SDL/sgui/sdl-headers.h>
+# if defined(__APPLE__) || defined(__MACH__)
+#	include <SDL_getenv.h>
+# else
+#	include <SDL/SDL_getenv.h>
+# endif
+
 
 using namespace std;
 

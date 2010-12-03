@@ -1,5 +1,6 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/scrollbar.h>
-#include <SDL/SDL.h>
 #include "arrowdata.h"
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>

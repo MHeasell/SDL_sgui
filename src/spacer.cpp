@@ -1,3 +1,5 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/spacer.h>
 
 namespace Gui

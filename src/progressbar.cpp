@@ -1,3 +1,5 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/progressbar.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>

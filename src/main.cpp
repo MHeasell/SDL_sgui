@@ -1,4 +1,5 @@
-#include <SDL/SDL.h>
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_sgui.h>
 

@@ -1,3 +1,5 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/receiver.h>
 #include <SDL/sgui/widget.h>
 

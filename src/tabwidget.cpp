@@ -1,7 +1,8 @@
+
+#include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/tabwidget.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
-#include <SDL/SDL.h>
 #include <algorithm>
 
 using namespace std;
