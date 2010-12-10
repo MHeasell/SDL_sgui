@@ -21,7 +21,6 @@ namespace Gui
 		ustring(const wchar_t *s) : std::wstring(s ? s : L"")	{}
 
 		operator std::string() const {	return Gui::toUtf8(*this);	}
-		operator std::wstring() const {	return *this;	}
 
 		std::string toUtf8() const {	return Gui::toUtf8(*this);	}
 	};
