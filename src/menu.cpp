@@ -12,7 +12,7 @@ using namespace std;
 namespace Gui
 {
 
-	Menu::Menu(const ustring &Name, const ustring &Caption, Widget *parent) : Floatting(Name, parent), Caption(Caption)
+	Menu::Menu(const ustring &Name, const ustring &Caption, Widget *parent) : Floatting(Name, parent), bCanBeHidden(false), Caption(Caption)
 	{
 		Widget::setLayout(new VBoxLayout);
 	}

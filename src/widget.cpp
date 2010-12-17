@@ -48,7 +48,8 @@ namespace Gui
 		childs.clear();
 		wtable.erase(Name);
 
-		for(set<Receiver*>::iterator i = listeners.begin() ; i != listeners.end() ; ++i)
+		set<Receiver*> recv = listeners;
+		for(set<Receiver*>::iterator i = recv.begin() ; i != recv.end() ; ++i)
 		{
 			(*i)->emitters.erase(this);
 			if ((*i)->emitters.empty())

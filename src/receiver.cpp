@@ -14,7 +14,8 @@ namespace Gui
 
 	Receiver::~Receiver()
 	{
-		for(set<Widget*>::iterator i = emitters.begin() ; i != emitters.end() ; ++i)
+		set<Widget*> tmp = emitters;
+		for(set<Widget*>::iterator i = tmp.begin() ; i != tmp.end() ; ++i)
 			(*i)->removeListener(this);
 	}
 

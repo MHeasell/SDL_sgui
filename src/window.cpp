@@ -22,13 +22,13 @@ namespace Gui
 	Window::Window(const ustring &Name, int w, int h, uint32 flags) : Widget(Name), flags(flags)
 	{
 		middle = new Widget("");
+		refreshInProgress = false;
+		layoutUpdateInProgress = false;
 		Widget::setLayout(new VBoxLayout);
 		menubar = NULL;
 		takeFocus();
 		this->w = -1;
 		this->h = -1;
-		refreshInProgress = false;
-		layoutUpdateInProgress = false;
 		resize(w, h);
 		Widget::addChild(middle);
 		setLayout(new VBoxLayout);
@@ -306,17 +306,18 @@ namespace Gui
 	void Window::event(SDL_Event *e)
 	{
 		bool mouseOnFloatting = false;
+		set<Floatting*> fobj = floatting;
 		switch(e->type)
 		{
 		case SDL_KEYDOWN:			/**< Keys pressed */
 		case SDL_KEYUP:				/**< Keys released */
-			for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+			for(set<Floatting*>::iterator i = fobj.begin() ; i != fobj.end() ; ++i)
 				(*i)->event(e);
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:	/**< Mouse button pressed */
 		case SDL_MOUSEBUTTONUP:		/**< Mouse button released */
-			for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+			for(set<Floatting*>::iterator i = fobj.begin() ; i != fobj.end() ; ++i)
 			{
 				if (e->button.x < (*i)->x
 					|| e->button.x >= (*i)->x + (*i)->w
@@ -339,7 +340,7 @@ namespace Gui
 			}
 			break;
 		case SDL_MOUSEMOTION:			/**< Mouse moved */
-			for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+			for(set<Floatting*>::iterator i = fobj.begin() ; i != fobj.end() ; ++i)
 			{
 				if (e->motion.x < (*i)->x
 					|| e->motion.x >= (*i)->x + (*i)->w
@@ -367,9 +368,10 @@ namespace Gui
 		};
 		if (!mouseOnFloatting)
 		{
+			fobj = floatting;
 			if (e->type == SDL_MOUSEBUTTONDOWN)
 			{
-				for(set<Floatting*>::iterator i = floatting.begin() ; i != floatting.end() ; ++i)
+				for(set<Floatting*>::iterator i = fobj.begin() ; i != fobj.end() ; ++i)
 					if (dynamic_cast<Menu*>(*i))
 						static_cast<Menu*>(*i)->hide();
 			}
