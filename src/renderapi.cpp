@@ -39,6 +39,7 @@ using namespace std;
 namespace Gui
 {
 
+	uint8 colormap[32768U];
 	uint32 black;
 	uint32 darkgrey;
 	uint32 grey;
@@ -64,25 +65,32 @@ namespace Gui
 	void updateGUIColors()
 	{
 		SDL_Surface *screen = SDL_GetVideoSurface();
-		SDL_PixelFormat *format = screen->format;
-		black = SDL_MapRGBA(format, 0x0, 0x0, 0x0, 0x0);
-		darkgrey = SDL_MapRGBA(format, 0x3F, 0x3F, 0x3F, 0x0);
-		grey = SDL_MapRGBA(format, 0x7F, 0x7F, 0x7F, 0x0);
-		lightgrey = SDL_MapRGBA(format, 0xCF, 0xCF, 0xCF, 0x0);
-		verylightgrey = SDL_MapRGBA(format, 0xDF, 0xDF, 0xDF, 0x0);
-		white = SDL_MapRGBA(format, 0xFF, 0xFF, 0xFF, 0x0);
-		blue = SDL_MapRGBA(format, 0x0, 0x0, 0xFF, 0x0);
-		red = SDL_MapRGBA(format, 0xFF, 0x0, 0x0, 0x0);
-		green = SDL_MapRGBA(format, 0x0, 0xFF, 0x0, 0x0);
-		yellow = SDL_MapRGBA(format, 0xFF, 0xFF, 0x0, 0x0);
-		darkblue = SDL_MapRGBA(format, 0x0, 0x0, 0x7F, 0x0);
-		darkred = SDL_MapRGBA(format, 0x7F, 0x0, 0x0, 0x0);
-		darkgreen = SDL_MapRGBA(format, 0x0, 0x7F, 0x0, 0x0);
-		darkyellow = SDL_MapRGBA(format, 0x7F, 0x7F, 0x0, 0x0);
-		lightblue = SDL_MapRGBA(format, 0x7F, 0x7F, 0xFF, 0x0);
-		lightred = SDL_MapRGBA(format, 0xFF, 0x7F, 0x7F, 0x0);
-		lightgreen = SDL_MapRGBA(format, 0x7F, 0xFF, 0x7F, 0x0);
-		lightyellow = SDL_MapRGBA(format, 0xFF, 0xFF, 0x7F, 0x0);
+		const SDL_PixelFormat *format = screen->format;
+		if (format->BytesPerPixel == 1)
+		{
+			for(int r = 0 ; r < 32 ; ++r)
+				for(int g = 0 ; g < 32 ; ++g)
+					for(int b = 0 ; b < 32 ; ++b)
+						colormap[(r << 10) | (g << 5) | b] = SDL_MapRGB(format, r << 3, g << 3, b << 3);
+		}
+		black = mapRGBA(format, 0x0, 0x0, 0x0, 0x0);
+		darkgrey = mapRGBA(format, 0x3F, 0x3F, 0x3F, 0x0);
+		grey = mapRGBA(format, 0x7F, 0x7F, 0x7F, 0x0);
+		lightgrey = mapRGBA(format, 0xCF, 0xCF, 0xCF, 0x0);
+		verylightgrey = mapRGBA(format, 0xDF, 0xDF, 0xDF, 0x0);
+		white = mapRGBA(format, 0xFF, 0xFF, 0xFF, 0x0);
+		blue = mapRGBA(format, 0x0, 0x0, 0xFF, 0x0);
+		red = mapRGBA(format, 0xFF, 0x0, 0x0, 0x0);
+		green = mapRGBA(format, 0x0, 0xFF, 0x0, 0x0);
+		yellow = mapRGBA(format, 0xFF, 0xFF, 0x0, 0x0);
+		darkblue = mapRGBA(format, 0x0, 0x0, 0x7F, 0x0);
+		darkred = mapRGBA(format, 0x7F, 0x0, 0x0, 0x0);
+		darkgreen = mapRGBA(format, 0x0, 0x7F, 0x0, 0x0);
+		darkyellow = mapRGBA(format, 0x7F, 0x7F, 0x0, 0x0);
+		lightblue = mapRGBA(format, 0x7F, 0x7F, 0xFF, 0x0);
+		lightred = mapRGBA(format, 0xFF, 0x7F, 0x7F, 0x0);
+		lightgreen = mapRGBA(format, 0x7F, 0xFF, 0x7F, 0x0);
+		lightyellow = mapRGBA(format, 0xFF, 0xFF, 0x7F, 0x0);
 	}
 
 	SDL_Surface *createNativeSurface(int w, int h)
@@ -142,6 +150,8 @@ namespace Gui
 
 	void blit(SDL_Surface *src, SDL_Surface *dst, int x, int y)
 	{
+		if (dst->w <= 0 || dst->h <= 0 || src->w <= 0 || src->h <= 0)
+			return;
 		SDL_Rect rsrc, rdst;
 		rsrc.x = 0;
 		rsrc.y = 0;
@@ -158,6 +168,8 @@ namespace Gui
 
 	void blit(SDL_Surface *src, SDL_Surface *dst, int x0, int y0, int x1, int y1, int w, int h)
 	{
+		if (w <= 0 || h <= 0 || dst->w <= 0 || dst->h <= 0 || src->w <= 0 || src->h <= 0)
+			return;
 		SDL_Rect rsrc, rdst;
 		rsrc.x = x0;
 		rsrc.y = y0;
@@ -172,9 +184,27 @@ namespace Gui
 		SDL_BlitSurface(src, &rsrc, dst, &rdst);
 	}
 
+	inline bool memdiff(const void *s1, const void *s2, const size_t l)
+	{
+		const size_t *pl1 = (const size_t*)s1;
+		const size_t *pl2 = (const size_t*)s2;
+		const size_t *lend = pl1 + (l / sizeof(size_t));
+		while((pl1 != lend) & (*pl1 == *pl2))
+			++pl1, ++pl2;
+		if (pl1 != lend)
+			return true;
+		const byte *bend = (const byte*)s1 + l;
+		const byte *pb1 = (const byte*)pl1;
+		const byte *pb2 = (const byte*)pl2;
+		for( ; pb1 != bend ; ++pb1, ++pb2)
+			if (*pb1 != *pb2)
+				return true;
+		return false;
+	}
+
 	bool compareSurfaces(SDL_Surface *src, SDL_Surface *dst, int x, int y)
 	{
-		if (src->format->BitsPerPixel != dst->format->BitsPerPixel)
+		if (src->format->BitsPerPixel != dst->format->BitsPerPixel || dst->w <= 0 || dst->h <= 0 || src->w <= 0 || src->h <= 0)
 			return true;
 		if (x < _X0(dst)
 			|| y < _Y0(dst)
@@ -186,51 +216,39 @@ namespace Gui
 		case 1:
 			for(int dy = 0 ; dy < src->h ; ++dy)
 			{
-				byte *p = (byte*)src->pixels + dy * src->pitch;
-				byte *q = (byte*)dst->pixels + (dy + y) * dst->pitch + x;
-				for(byte *end = p + src->w ; p != end ; ++p, ++q)
-				{
-					if (*p != *q)
-						return true;
-				}
+				const byte *p = (byte*)src->pixels + dy * src->pitch;
+				const byte *q = (byte*)dst->pixels + (dy + y) * dst->pitch + x;
+				if (memdiff(p, q, src->w))
+					return true;
 			}
 			break;
 		case 2:
 			x *= 2;
 			for(int dy = 0 ; dy < src->h ; ++dy)
 			{
-				uint16 *p = (uint16*)((byte*)src->pixels + dy * src->pitch);
-				uint16 *q = (uint16*)((byte*)dst->pixels + (dy + y) * dst->pitch + x);
-				for(uint16 *end = p + src->w ; p != end ; ++p, ++q)
-				{
-					if (*p != *q)
-						return true;
-				}
+				const uint16 *p = (uint16*)((byte*)src->pixels + dy * src->pitch);
+				const uint16 *q = (uint16*)((byte*)dst->pixels + (dy + y) * dst->pitch + x);
+				if (memdiff(p, q, src->w << 1))
+					return true;
 			}
 			break;
 		case 3:
 			for(int dy = 0 ; dy < src->h ; ++dy)
 			{
-				byte *p = (byte*)src->pixels + dy * src->pitch;
-				byte *q = (byte*)dst->pixels + (dy + y) * dst->pitch + x * 3;
-				for(byte *end = p + src->w * 3 ; p != end ; ++p, ++q)
-				{
-					if (*p != *q)
-						return true;
-				}
+				const byte *p = (byte*)src->pixels + dy * src->pitch;
+				const byte *q = (byte*)dst->pixels + (dy + y) * dst->pitch + x * 3;
+				if (memdiff(p, q, src->w * 3))
+					return true;
 			}
 			break;
 		case 4:
 			x *= 4;
 			for(int dy = 0 ; dy < src->h ; ++dy)
 			{
-				uint32 *p = (uint32*)((byte*)src->pixels + dy * src->pitch);
-				uint32 *q = (uint32*)((byte*)dst->pixels + (dy + y) * dst->pitch + x);
-				for(uint32 *end = p + src->w ; p != end ; ++p, ++q)
-				{
-					if (*p != *q)
-						return true;
-				}
+				const uint32 *p = (uint32*)((byte*)src->pixels + dy * src->pitch);
+				const uint32 *q = (uint32*)((byte*)dst->pixels + (dy + y) * dst->pitch + x);
+				if (memdiff(p, q, src->w << 2))
+					return true;
 			}
 			break;
 		};
@@ -240,6 +258,8 @@ namespace Gui
 
 	void line(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
 	{
+		if (dst->w <= 0 || dst->h <= 0)
+			return;
 #undef RENDER
 #define RENDER(BPP)\
 		if (abs(x0 - x1) > abs(y0 - y1))\
@@ -255,7 +275,7 @@ namespace Gui
 			{\
 				if (x < _X0(dst) || x >= _X1(dst))\
 					continue;\
-				int y = y0 + ((y1 - y0) * (x - x0) + hdx) / dx;\
+				const int y = y0 + ((y1 - y0) * (x - x0) + hdx) / dx;\
 				if (y < _Y0(dst) || y >= _Y1(dst))\
 					continue;\
 				Font::setPixel##BPP(dst, x, y, col);\
@@ -274,7 +294,7 @@ namespace Gui
 			{\
 				if (y < _Y0(dst) || y >= _Y1(dst))\
 					continue;\
-				int x = x0 + ((x1 - x0) * (y - y0) + hdy) / dy;\
+				const int x = x0 + ((x1 - x0) * (y - y0) + hdy) / dy;\
 				if (x < _X0(dst) || x >= _X1(dst))\
 					continue;\
 				Font::setPixel##BPP(dst, x, y, col);\
@@ -292,27 +312,64 @@ namespace Gui
 
 	void vline(SDL_Surface *dst, int x, int y0, int y1, uint32 col)
 	{
-		if (x < _X0(dst) || x >= _X1(dst))
+		if (x < _X0(dst) || x >= _X1(dst) || dst->w <= 0 || dst->h <= 0)
 			return;
 		y0 = max<int>(_Y0(dst), y0);
 		y1 = min<int>(_Y1(dst) - 1, y1);
-		if (y0 < _Y1(dst) && y1 >= _Y0(dst))
+		if (y0 < _Y1(dst) && y1 >= _Y0(dst) && y0 <= y1)
 		{
-#undef RENDER
-#define RENDER(BPP)\
-			for(int y = y0 ; y <= y1 ; ++y)\
-				Font::setPixel##BPP(dst, x, y, col);
-			RENDERALL();
+			byte *p = (byte*)dst->pixels + y0 * dst->pitch + x * dst->format->BytesPerPixel;
+			switch(dst->format->BytesPerPixel)
+			{
+			case 1:
+				{
+					const size_t step = dst->pitch;
+					byte* const end = p + (y1 - y0 + 1) * step;
+					for( ; p != end ; p += step)
+						*p = col;
+				}
+				break;
+			case 2:
+				{
+					uint16 *_p = (uint16*)p;
+					const size_t step = dst->pitch >> 1;
+					uint16* const end = _p + (y1 - y0 + 1) * step;
+					for( ; _p != end ; _p += step)
+						*_p = col;
+				}
+				break;
+			case 3:
+				{
+					const byte r = col >> 16;
+					const byte g = col >> 8;
+					const byte b = col;
+					const size_t step = dst->pitch;
+					for(byte *end = p + (y1 - y0 + 1) * step ; p != end ; p += step)
+					{
+						p[0] = r;
+						p[1] = g;
+						p[2] = b;
+					}
+				}
+				break;
+			case 4:
+				{
+					const size_t step = dst->pitch >> 2;
+					for(uint32 *_p = (uint32*)p, *end = (uint32*)(p + (y1 - y0 + 1) * dst->pitch) ; _p != end ; _p += step)
+						*_p = col;
+				}
+				break;
+			}
 		}
 	}
 
 	void hline(SDL_Surface *dst, int y, int x0, int x1, uint32 col)
 	{
-		if (y < _Y0(dst) || y >= _Y1(dst) || x1 < x0)
+		if (y < _Y0(dst) || y >= _Y1(dst) || x1 < x0 || dst->w <= 0 || dst->h <= 0)
 			return;
 		x0 = max<int>(_X0(dst), x0);
 		x1 = min<int>(_X1(dst) - 1, x1);
-		if (x0 < _X1(dst) && x1 >= _X0(dst))
+		if (x0 < _X1(dst) && x1 >= _X0(dst) && x0 <= x1)
 		{
 			byte *p = (byte*)dst->pixels + y * dst->pitch + x0 * dst->format->BytesPerPixel;
 			switch(dst->format->BytesPerPixel)
@@ -322,17 +379,22 @@ namespace Gui
 				return;
 			case 2:
 				{
-					uint16 *_p = (uint16*)p;
-					uint16 *end = _p + x1 - x0 + 1;
+					uint32 *_pl = (uint32*)p;
+					uint32* const lend = _pl + (x1 - x0 + 1 >> 1);
+					col = (col & 0xFFFFU) | (col << 16);
+					for( ; _pl != lend ; ++_pl)
+						*_pl = col;
+					uint16 *_p = (uint16*)_pl;
+					uint16* const end = (uint16*)p + x1 - x0 + 1;
 					for( ; _p != end ; ++_p)
 						*_p = col;
 				}
 				break;
 			case 3:
 				{
-					byte r = col >> 16;
-					byte g = col >> 8;
-					byte b = col;
+					const byte r = col >> 16;
+					const byte g = col >> 8;
+					const byte b = col;
 					for(byte *end = p + (x1 - x0 + 1) * 3 ; p != end ; ++p)
 					{
 						*p = r; ++p;
@@ -359,6 +421,8 @@ namespace Gui
 
 	void fillbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, uint32 col)
 	{
+		if (x0 > x1 || y0 > y1 || dst->w <= 0 || dst->h <= 0)
+			return;
 		SDL_Rect rect;
 		rect.x = x0;
 		rect.y = y0;
@@ -392,6 +456,8 @@ namespace Gui
 
 	void circle(SDL_Surface *dst, int x, int y, int r, uint32 col)
 	{
+		if (dst->w <= 0 || dst->h <= 0)
+			return;
 		const int r2 = r * r;
 		const int hr = int(r * M_SQRT2 * 0.5f + 0.5f);
 		for(int _r = 0 ; _r <= hr ; ++_r)
@@ -424,13 +490,15 @@ namespace Gui
 
 	void gradientcircle(SDL_Surface *dst, int x, int y, int radius, float dx, float dy, uint32 col, uint32 dcol)
 	{
-		Uint8 r, g, b;
-		Uint8 dr, dg, db;
-		SDL_GetRGB(col, dst->format, &r, &g, &b);
-		SDL_GetRGB(dcol, dst->format, &dr, &dg, &db);
+		uint32 r, g, b;
+		uint32 dr, dg, db;
+		getRGB(col, dst->format, r, g, b);
+		getRGB(dcol, dst->format, dr, dg, db);
 
 		const int r2 = radius * radius;
 		const int hr = int(radius * M_SQRT2 * 0.5f + 0.5f);
+		const int idx = int(0x1000 * dx);
+		const int idy = int(0x1000 * dy);
 		for(int _r = 0 ; _r <= hr ; ++_r)
 		{
 			const int _dx = int(sqrt(float(r2 - _r * _r)) + 0.5f);
@@ -438,11 +506,11 @@ namespace Gui
 #define DRAW_LINE()\
 			for(int _x = _x0 ; _x <= _x1 ; ++_x)\
 			{\
-				const float d = (x - _x) * dx + (_y - y) * dy;\
-				const int nr = clamp(int(r + d * dr), 0, 255);\
-				const int ng = clamp(int(g + d * dg), 0, 255);\
-				const int nb = clamp(int(b + d * db), 0, 255);\
-				putpixel(dst, _x, _y, SDL_MapRGB(dst->format, nr, ng, nb));\
+				const int d = (x - _x) * idx + (_y - y) * idy;\
+				const uint32 nr = std::min<uint32>(r + d * dr, 0xFFU);\
+				const uint32 ng = std::min<uint32>(g + d * dg, 0xFFU);\
+				const uint32 nb = std::min<uint32>(b + d * db, 0xFFU);\
+				putpixel(dst, _x, _y, mapRGB(dst->format, nr, ng, nb));\
 			}
 			int _y = y - _r, _x0 = x - _dx, _x1 = x + _dx;
 			DRAW_LINE();
@@ -457,6 +525,8 @@ namespace Gui
 
 	void arc(SDL_Surface *dst, int x, int y, int r, int start, int end, uint32 col)
 	{
+		if (dst->w <= 0 || dst->h <= 0)
+			return;
 		const int r2 = r * r;
 		const int hr = int(r * M_SQRT2 * 0.5f + 0.5f);
 		const float sx = sin(start * M_PI / 180.0);
@@ -502,21 +572,26 @@ namespace Gui
 
 	void gradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, float dx, float dy, uint32 col, uint32 dcol)
 	{
-		const float mx = (x0 + x1) * 0.5f;
-		const float my = (y0 + y1) * 0.5f;
-		Uint8 r, g, b;
-		Uint8 dr, dg, db;
-		SDL_GetRGB(col, dst->format, &r, &g, &b);
-		SDL_GetRGB(dcol, dst->format, &dr, &dg, &db);
+		if (dst->w <= 0 || dst->h <= 0)
+			return;
+		const int mx = (x0 + x1 + 1) >> 1;
+		const int my = (y0 + y1 + 1) >> 1;
+		const int idy = int(0x1000 * dy);
+		const int idx = int(0x1000 * dx);
+		const SDL_PixelFormat *format = dst->format;
+		sint32 r, g, b;
+		sint32 dr, dg, db;
+		getRGB(col, format, r, g, b);
+		getRGB(dcol, format, dr, dg, db);
 		if (dx == 0.0f)
 		{
 			for(int y = y0 ; y <= y1 ; ++y)
 			{
-				const float d = (y - my) * dy;
-				const int nr = clamp(int(r + d * dr), 0, 255);
-				const int ng = clamp(int(g + d * dg), 0, 255);
-				const int nb = clamp(int(b + d * db), 0, 255);
-				const uint32 c = SDL_MapRGB(dst->format, nr, ng, nb);
+				const int d = (y - my) * idy;
+				const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+				const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+				const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+				const uint32 c = mapRGB(format, nr, ng, nb);
 				hline(dst, y, x0, x1, c);
 			}
 			return;
@@ -525,41 +600,101 @@ namespace Gui
 		{
 			for(int x = x0 ; x <= x1 ; ++x)
 			{
-				const float d = (x - mx) * dx;
-				const int nr = clamp(int(r + d * dr), 0, 255);
-				const int ng = clamp(int(g + d * dg), 0, 255);
-				const int nb = clamp(int(b + d * db), 0, 255);
-				const uint32 c = SDL_MapRGB(dst->format, nr, ng, nb);
+				const int d = (x - mx) * idx;
+				const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+				const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+				const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+				const uint32 c = mapRGB(format, nr, ng, nb);
 				vline(dst, x, y0, y1, c);
 			}
 			return;
 		}
-#undef RENDER
-#define RENDER(BPP)\
-		for(int y = y0 ; y <= y1 ; ++y)\
-		{\
-			if (y < _Y0(dst) || y >= _Y1(dst))	continue;\
-			for(int x = x0 ; x <= x1 ; ++x)\
-			{\
-				if (x < _X0(dst) || x >= _X1(dst))	continue;\
-				const float d = (x - mx) * dx + (y - my) * dy;\
-				const int nr = clamp(int(r + d * dr), 0, 255);\
-				const int ng = clamp(int(g + d * dg), 0, 255);\
-				const int nb = clamp(int(b + d * db), 0, 255);\
-				Font::setPixel##BPP(dst, x, y, SDL_MapRGB(dst->format, nr, ng, nb));\
-			}\
+		y0 = std::max<int>(y0, _Y0(dst));
+		y1 = std::min<int>(y1, _Y1(dst) - 1);
+		x0 = std::max<int>(x0, _X0(dst));
+		x1 = std::min<int>(x1, _X1(dst) - 1);
+		switch(format->BytesPerPixel)
+		{
+		case 1:
+			for(int y = y0 ; y <= y1 ; ++y)
+			{
+				byte *p = (byte*)dst->pixels + y * dst->pitch + x0;
+				for(int x = x0 ; x <= x1 ; ++x, ++p)
+				{
+					const int d = (x - mx) * idx + (y - my) * idy;
+					const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+					const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+					const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+					*p = mapRGB(format, nr, ng, nb);
+				}
+			}
+			break;
+		case 2:
+			for(int y = y0 ; y <= y1 ; ++y)
+			{
+				uint16 *p = (uint16*)dst->pixels + y * (dst->pitch >> 1) + x0;
+				for(int x = x0 ; x <= x1 ; ++x, ++p)
+				{
+					const int d = (x - mx) * idx + (y - my) * idy;
+					const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+					const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+					const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+					*p = mapRGB(format, nr, ng, nb);
+				}
+			}
+			break;
+		case 3:
+			r = (col >> 16) & 0xFFU;
+			g = (col >> 8) & 0xFFU;
+			b = col & 0xFFU;
+			dr = (dcol >> 16) & 0xFFU;
+			dg = (dcol >> 8) & 0xFFU;
+			db = dcol & 0xFFU;
+			for(int y = y0 ; y <= y1 ; ++y)
+			{
+				byte *p = (byte*)dst->pixels + y * dst->pitch + x0 * 3;
+				for(int x = x0 ; x <= x1 ; ++x, p += 3)
+				{
+					const int d = (x - mx) * idx + (y - my) * idy;
+					const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+					const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+					const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+					p[0] = nr;
+					p[1] = ng;
+					p[2] = nb;
+				}
+			}
+			break;
+		case 4:
+			for(int y = y0 ; y <= y1 ; ++y)
+			{
+				uint32 *p = (uint32*)dst->pixels + (y * dst->pitch >> 2) + x0;
+				for(int x = x0 ; x <= x1 ; ++x, ++p)
+				{
+					const int d = (x - mx) * idx + (y - my) * idy;
+					const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+					const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+					const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+					*p = mapRGB(format, nr,ng,nb);
+				}
+			}
+			break;
 		}
-		RENDERALL();
 	}
 
 	void roundedgradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1, int radius, float dx, float dy, uint32 col, uint32 dcol)
 	{
-		const float mx = (x0 + x1) * 0.5f;
-		const float my = (y0 + y1) * 0.5f;
-		Uint8 r, g, b, a;
-		Uint8 dr, dg, db, da;
-		SDL_GetRGBA(col, dst->format, &r, &g, &b, &a);
-		SDL_GetRGBA(dcol, dst->format, &dr, &dg, &db, &da);
+		if (dst->w <= 0 || dst->h <= 0)
+			return;
+		const int mx = (x0 + x1 + 1) >> 1;
+		const int my = (y0 + y1 + 1) >> 1;
+		const int idy = int(0x1000 * dy);
+		const int idx = int(0x1000 * dx);
+		const SDL_PixelFormat *format = dst->format;
+		sint32 r, g, b, a;
+		sint32 dr, dg, db, da;
+		getRGBA(col, format, r, g, b, a);
+		getRGBA(dcol, format, dr, dg, db, da);
 		const int bx0 = max<int>(x0, _X0(dst));
 		const int bx1 = min<int>(x1, _X1(dst) - 1);
 		if (bx1 >= _X0(dst) && bx0 < _X1(dst))
@@ -571,23 +706,23 @@ namespace Gui
 				{
 					if (y < _Y0(dst) || y >= _Y1(dst))
 						continue;
-					byte *p = (byte*)dst->pixels + y * dst->pitch + bx0 * 4;
+					byte *p = (byte*)dst->pixels + y * dst->pitch + bx0;
 					if (dx == 0.0f)
 					{
-						const float d = (y - my) * dy;
-						const int nr = clamp(int(r + d * dr), 0, 255);
-						const int ng = clamp(int(g + d * dg), 0, 255);
-						const int nb = clamp(int(b + d * db), 0, 255);
-						hline(dst, y, bx0, bx1, SDL_MapRGB(dst->format, nr, ng, nb));
+						const int d = (y - my) * idy;
+						const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+						const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+						const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+						hline(dst, y, bx0, bx1, mapRGB(format, nr, ng, nb));
 					}
 					else
 						for(int x = bx0 ; x <= bx1 ; ++x, ++p)
 						{
-							const float d = (x - mx) * dx + (y - my) * dy;
-							const int nr = clamp(int(r + d * dr), 0, 255);
-							const int ng = clamp(int(g + d * dg), 0, 255);
-							const int nb = clamp(int(b + d * db), 0, 255);
-							*p = SDL_MapRGB(dst->format, nr, ng, nb);
+							const int d = (x - mx) * idx + (y - my) * idy;
+							const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+							const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+							const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+							*p = mapRGB(dst->format, nr, ng, nb);
 						}
 				}
 				break;
@@ -596,22 +731,23 @@ namespace Gui
 				{
 					if (y < _Y0(dst) || y >= _Y1(dst))
 						continue;
+					uint16 *p = (uint16*)dst->pixels + (y * dst->pitch >> 1) + bx0;
 					if (dx == 0.0f)
 					{
-						const float d = (y - my) * dy;
-						const int nr = clamp(int(r + d * dr), 0, 255);
-						const int ng = clamp(int(g + d * dg), 0, 255);
-						const int nb = clamp(int(b + d * db), 0, 255);
-						hline(dst, y, bx0, bx1, SDL_MapRGB(dst->format, nr, ng, nb));
+						const int d = (y - my) * idy;
+						const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+						const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+						const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+						hline(dst, y, bx0, bx1, mapRGB(dst->format, nr, ng, nb));
 					}
 					else
-						for(int x = bx0 ; x <= bx1 ; ++x)
+						for(int x = bx0 ; x <= bx1 ; ++x, ++p)
 						{
-							const float d = (x - mx) * dx + (y - my) * dy;
-							const int nr = clamp(int(r + d * dr), 0, 255);
-							const int ng = clamp(int(g + d * dg), 0, 255);
-							const int nb = clamp(int(b + d * db), 0, 255);
-							Font::setPixel16(dst, x, y, SDL_MapRGB(dst->format, nr, ng, nb));
+							const int d = (x - mx) * idx + (y - my) * idy;
+							const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+							const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+							const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+							*p = mapRGB(format, nr, ng, nb);
 						}
 				}
 				break;
@@ -622,58 +758,51 @@ namespace Gui
 						continue;
 					if (dx == 0.0f)
 					{
-						const float d = (y - my) * dy;
-						const int nr = clamp(int(r + d * dr), 0, 255);
-						const int ng = clamp(int(g + d * dg), 0, 255);
-						const int nb = clamp(int(b + d * db), 0, 255);
-						hline(dst, y, bx0, bx1, SDL_MapRGB(dst->format, nr, ng, nb));
+						const int d = (y - my) * idy;
+						const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+						const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+						const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+						hline(dst, y, bx0, bx1, mapRGB(dst->format, nr, ng, nb));
 					}
 					else
 						for(int x = bx0 ; x <= bx1 ; ++x)
 						{
-							const float d = (x - mx) * dx + (y - my) * dy;
-							const int nr = clamp(int(r + d * dr), 0, 255);
-							const int ng = clamp(int(g + d * dg), 0, 255);
-							const int nb = clamp(int(b + d * db), 0, 255);
-							Font::setPixel24(dst, x, y, SDL_MapRGB(dst->format, nr, ng, nb));
+							const int d = (x - mx) * idx + (y - my) * idy;
+							const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+							const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+							const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+							Font::setPixel24(dst, x, y, mapRGB(dst->format, nr, ng, nb));
 						}
 				}
 				break;
 			case 4:
-				r = col;
-				g = col >> 8;
-				b = col >> 16;
-				a = col >> 24;
-				dr = dcol;
-				dg = dcol >> 8;
-				db = dcol >> 16;
-				da = dcol >> 24;
 				for(int y = y0 + radius ; y <= y1 - radius ; ++y)
 				{
 					if (y < _Y0(dst) || y >= _Y1(dst))
 						continue;
-					byte *p = (byte*)dst->pixels + y * dst->pitch + bx0 * 4;
+					uint32 *p = (uint32*)dst->pixels + (y * dst->pitch >> 2) + bx0;
 					if (dx == 0.0f)
 					{
-						const float d = (y - my) * dy;
-						const uint32 nr = clamp(int(r + d * dr), 0, 255);
-						const uint32 ng = clamp(int(g + d * dg), 0, 255);
-						const uint32 nb = clamp(int(b + d * db), 0, 255);
-						const uint32 na = clamp(int(a + d * da), 0, 255);
-						hline(dst, y, bx0, bx1, nr | (ng << 8) | (nb << 16) | (na << 24));
+						const int d = (y - my) * idy;
+						const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+						const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+						const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+						const uint32 na = min<uint32>(a + (d * da >> 12), 0xFFU);
+						hline(dst, y, bx0, bx1, mapRGBA(format, nr, ng, nb, na));
 					}
 					else
-						for(int x = bx0 ; x <= bx1 ; ++x)
+						for(int x = bx0 ; x <= bx1 ; ++x, ++p)
 						{
-							const float d = (x - mx) * dx + (y - my) * dy;
-							*p = clamp(int(r + d * dr), 0, 255);	++p;
-							*p = clamp(int(g + d * dg), 0, 255);	++p;
-							*p = clamp(int(b + d * db), 0, 255);	++p;
-							*p = clamp(int(a + d * da), 0, 255);	++p;
+							const int d = (x - mx) * idx + (y - my) * idy;
+							const uint32 nr = min<uint32>(r + (d * dr >> 12), 0xFFU);
+							const uint32 ng = min<uint32>(g + (d * dg >> 12), 0xFFU);
+							const uint32 nb = min<uint32>(b + (d * db >> 12), 0xFFU);
+							const uint32 na = min<uint32>(a + (d * da >> 12), 0xFFU);
+							*p = mapRGBA(format, nr, ng, nb, na);
 						}
 				}
-				SDL_GetRGBA(col, dst->format, &r, &g, &b, &a);
-				SDL_GetRGBA(dcol, dst->format, &dr, &dg, &db, &da);
+				getRGBA(col, dst->format, r, g, b, a);
+				getRGBA(dcol, dst->format, dr, dg, db, da);
 				break;
 			};
 		}
@@ -689,11 +818,11 @@ namespace Gui
 #define DRAW_LINE()\
 			for(int x = _x0 ; x <= _x1 ; ++x)\
 			{\
-				const float d = (x - mx) * dx + (y - my) * dy;\
-				const int nr = clamp(int(r + d * dr), 0, 255);\
-				const int ng = clamp(int(g + d * dg), 0, 255);\
-				const int nb = clamp(int(b + d * db), 0, 255);\
-				putpixel(dst, x, y, SDL_MapRGB(dst->format, nr, ng, nb));\
+				const int d = (x - mx) * idx + (y - my) * idy;\
+				const uint32 nr = std::min<uint32>(r + (d * dr >> 12), 0xFFU);\
+				const uint32 ng = std::min<uint32>(g + (d * dg >> 12), 0xFFU);\
+				const uint32 nb = std::min<uint32>(b + (d * db >> 12), 0xFFU);\
+				putpixel(dst, x, y, mapRGB(dst->format, nr, ng, nb));\
 			}
 			DRAW_LINE();
 			y = y1 - radius + _r;
@@ -709,6 +838,8 @@ namespace Gui
 
 	void fill(SDL_Surface *dst, uint32 col)
 	{
+		if (dst->w <= 0 || dst->h <= 0)
+			return;
 		SDL_FillRect(dst, NULL, col);
 	}
 
@@ -829,8 +960,11 @@ namespace Gui
 
 	void vwhitealphagradientbox(SDL_Surface *dst, int x0, int y0, int x1, int y1)
 	{
+		if (dst->w <= 0 || dst->h <= 0)
+			return;
 		SDL_PixelFormat *format = dst->format;
 		const int h = y1 - y0 + 1;
+		const int ph = 0x10000 / h;
 		x0 = max<int>(x0, _X0(dst));
 		x1 = min<int>(x1, _X1(dst) - 1);
 		switch(format->BytesPerPixel)
@@ -839,7 +973,7 @@ namespace Gui
 			for(int y = y0 ; y <= y1 ; ++y)
 			{
 				if (y < _Y0(dst) || y >= _Y1(dst))	continue;
-				const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
+				const int bkg = 0xFF + ((0xCF - 0xFF) * y * ph >> 16);
 				const int iy = (h - y) * bkg;
 				byte *p = (byte*)dst->pixels + y * dst->pitch + x0;
 				int prevp = -1;
@@ -851,14 +985,12 @@ namespace Gui
 						continue;
 					}
 					prevp = *p;
-					Uint8 _r, _g, _b;
-					_r = format->palette->colors[*p].r;
-					_g = format->palette->colors[*p].g;
-					_b = format->palette->colors[*p].b;
-					_r = (_r * y + iy) / h;
-					_g = (_g * y + iy) / h;
-					_b = (_b * y + iy) / h;
-					*p = SDL_MapRGB(format, _r, _g, _b);
+					sint32 _r, _g, _b;
+					getRGB(*p, format, _r, _g, _b);
+					_r = (_r * y + iy) * ph >> 16;
+					_g = (_g * y + iy) * ph >> 16;
+					_b = (_b * y + iy) * ph >> 16;
+					*p = mapRGB(format, _r, _g, _b);
 				}
 			}
 			break;
@@ -866,9 +998,8 @@ namespace Gui
 			for(int y = y0 ; y <= y1 ; ++y)
 			{
 				if (y < _Y0(dst) || y >= _Y1(dst))	continue;
-				const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
-				const int iy6 = (h - y) * bkg >> 2;
-				const int iy5 = (h - y) * bkg >> 3;
+				const int bkg = 0xFF + ((0xCF - 0xFF) * y * ph >> 16);
+				const int iy = (h - y) * bkg;
 				uint16 *p = (uint16*)((byte*)dst->pixels + y * dst->pitch + x0 * 2);
 				int prevp = -1;
 				for(int x = x0 ; x <= x1 ; ++x, ++p)
@@ -879,16 +1010,12 @@ namespace Gui
 						continue;
 					}
 					prevp = *p;
-					Uint8 _r, _g, _b;
-					_r = (*p >> 11) & 31;
-					_g = (*p >> 5) & 63;
-					_b = *p & 31;
-					_r = (_r * y + iy5) / h;
-					_g = (_g * y + iy6) / h;
-					_b = (_b * y + iy5) / h;
-					*p = (uint32(_r) << 11)
-						 | (uint32(_g) << 5)
-						 | uint32(_b);
+					sint32 _r, _g, _b;
+					getRGB(*p, format, _r, _g, _b);
+					_r = (_r * y + iy) * ph >> 16;
+					_g = (_g * y + iy) * ph >> 16;
+					_b = (_b * y + iy) * ph >> 16;
+					*p = mapRGB(format, _r, _g, _b);
 				}
 			}
 			break;
@@ -896,7 +1023,7 @@ namespace Gui
 			for(int y = y0 ; y <= y1 ; ++y)
 			{
 				if (y < _Y0(dst) || y >= _Y1(dst))	continue;
-				const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
+				const int bkg = 0xFF + ((0xCF - 0xFF) * y * ph >> 16);
 				const int iy = (h - y) * bkg;
 				byte *p = (byte*)dst->pixels + y * dst->pitch + x0 * 3;
 				uint32 prev = 0xFFFFFF;
@@ -911,7 +1038,7 @@ namespace Gui
 					}
 					prev = (*((uint32*)p) >> 8);
 					for(int i = 0 ; i < 3 ; ++i, ++p)
-						*p = (*p * y + iy) / h;
+						*p = (*p * y + iy) * ph >> 16;
 				}
 			}
 			break;
@@ -919,7 +1046,7 @@ namespace Gui
 			for(int y = y0 ; y <= y1 ; ++y)
 			{
 				if (y < _Y0(dst) || y >= _Y1(dst))	continue;
-				const int bkg = 0xFF + (0xCF - 0xFF) * y / h;
+				const int bkg = 0xFF + ((0xCF - 0xFF) * y * ph >> 16);
 				const int iy = (h - y) * bkg;
 				byte *p = (byte*)dst->pixels + y * dst->pitch + x0 * 4;
 				uint32 prev = 0;
@@ -933,7 +1060,7 @@ namespace Gui
 					}
 					prev = *(uint32*)p;
 					for(int i = 0 ; i < 4 ; ++i, ++p)
-						*p = (*p * y + iy) / h;
+						*p = (*p * y + iy) * ph >> 16;
 				}
 			}
 			break;

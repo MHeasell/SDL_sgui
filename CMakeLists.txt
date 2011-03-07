@@ -52,7 +52,20 @@ SET(SOURCES
 	src/widget.cpp			include/SDL/sgui/widget.h
 	src/window.cpp			include/SDL/sgui/window.h)
 
-SET(CMAKE_CXX_FLAGS_RELEASE -Os)
+SET(DEMO_SOURCES
+	samples/demo.cpp)
+
+SET(CMAKE_CXX_FLAGS_RELEASE "-Os -ffast-math")
 
 include_directories(include)
 add_library(SDL_sgui ${SOURCES})
+
+IF(BUILD_DEMO)
+	include(FindSDL_image)
+	if(NOT SDLIMAGE_FOUND)
+		message(FATAL_ERROR "SDL_image not found, SDL_image is required to build the demo program")
+	endif(NOT SDLIMAGE_FOUND)
+	LINK_LIBRARIES(${SDLIMAGE_LIBRARY} SDL_sgui)
+	INCLUDE_DIRECTORIES(${SDLIMAGE_INCLUDE_DIR})
+	add_executable(demo ${DEMO_SOURCES})
+ENDIF(BUILD_DEMO)

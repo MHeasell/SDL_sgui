@@ -89,24 +89,15 @@ namespace Gui
 				if (e.resize.w != w || e.resize.h != h)
 				{
 					SDL_Surface *screen = SDL_GetVideoSurface();
-					if (screen->w < e.resize.w || screen->h < e.resize.h)
-					{
-						w = e.resize.w;
-						h = e.resize.h;
-						SDL_Surface *tmp = createNativeSurface(screen->w, screen->h);
-						blit(screen, tmp, 0, 0);
+					w = e.resize.w;
+					h = e.resize.h;
+					if (screen->w < e.resize.w
+						|| screen->h < e.resize.h
+						|| (screen->w >> 1) > e.resize.w
+						|| (screen->h >> 1) > e.resize.h)
 						setSDLVideo();
-						screen = SDL_GetVideoSurface();
-						blit(tmp, screen, 0, 0);
-						flip();
-						SDL_FreeSurface(tmp);
-					}
 					else
-					{
-						w = e.resize.w;
-						h = e.resize.h;
 						updateLayout();
-					}
 				}
 				break;
 

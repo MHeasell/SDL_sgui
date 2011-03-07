@@ -5,6 +5,7 @@
 
 struct SDL_Surface;
 struct SDL_Cursor;
+struct SDL_PixelFormat;
 
 namespace Gui
 {
@@ -37,6 +38,7 @@ namespace Gui
 	void initCursors();
 	SDL_Cursor *loadCursor(const char *image, int hot_x, int hot_y);
 
+	extern uint8 colormap[32768U];
 	extern uint32 black;
 	extern uint32 darkgrey;
 	extern uint32 grey;
@@ -57,6 +59,59 @@ namespace Gui
 	extern uint32 lightyellow;
 	extern SDL_Cursor *cursor_arrow;
 	extern SDL_Cursor *cursor_edit;
+
+	inline uint32 mapRGB(const SDL_PixelFormat* const format, uint32 r, uint32 g, uint32 b)
+	{
+		if (format->BytesPerPixel == 1)
+			return colormap[((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3)];
+		r >>= format->Rloss;
+		g >>= format->Gloss;
+		b >>= format->Bloss;
+		return (r << format->Rshift) | (g << format->Gshift) | (b << format->Bshift);
+	}
+
+	inline uint32 mapRGBA(const SDL_PixelFormat* const format, uint32 r, uint32 g, uint32 b, uint32 a)
+	{
+		if (format->BytesPerPixel == 1)
+			return colormap[((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3)];
+		r >>= format->Rloss;
+		g >>= format->Gloss;
+		b >>= format->Bloss;
+		a >>= format->Aloss;
+		return (r << format->Rshift) | (g << format->Gshift) | (b << format->Bshift) | (a << format->Ashift);
+	}
+
+	template<class T>
+	inline void getRGB(const uint32 c, const SDL_PixelFormat* const format, T &r, T &g, T &b)
+	{
+		if (format->BytesPerPixel == 1)
+		{
+			r = format->palette->colors[c].r;
+			g = format->palette->colors[c].g;
+			b = format->palette->colors[c].b;
+			return;
+		}
+		r = (c & format->Rmask) >> format->Rshift << format->Rloss;
+		g = (c & format->Gmask) >> format->Gshift << format->Gloss;
+		b = (c & format->Bmask) >> format->Bshift << format->Bloss;
+	}
+
+	template<class T>
+	inline void getRGBA(const uint32 c, const SDL_PixelFormat* const format, T &r, T &g, T &b, T &a)
+	{
+		if (format->BytesPerPixel == 1)
+		{
+			r = format->palette->colors[c].r;
+			g = format->palette->colors[c].g;
+			b = format->palette->colors[c].b;
+			a = 0;
+			return;
+		}
+		r = (c & format->Rmask) >> format->Rshift << format->Rloss;
+		g = (c & format->Gmask) >> format->Gshift << format->Gloss;
+		b = (c & format->Bmask) >> format->Bshift << format->Bloss;
+		a = (c & format->Amask) >> format->Ashift << format->Aloss;
+	}
 }
 
 #endif // RENDERAPI_H
