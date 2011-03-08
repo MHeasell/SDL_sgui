@@ -68,10 +68,61 @@ namespace Gui
 		const SDL_PixelFormat *format = screen->format;
 		if (format->BytesPerPixel == 1)
 		{
-			for(int r = 0 ; r < 32 ; ++r)
-				for(int g = 0 ; g < 32 ; ++g)
-					for(int b = 0 ; b < 32 ; ++b)
-						colormap[(r << 10) | (g << 5) | b] = SDL_MapRGB(format, r << 3, g << 3, b << 3);
+			static SDL_Color pal[256];
+			static bool bInit = true;
+			if (bInit)
+			{
+				for(int i = 0 ; i < 32 ; ++i)
+				{
+					const int j = i * 255 / 31;
+					pal[i].r = j;
+					pal[i].g = j;
+					pal[i].b = j;
+					pal[i + 32].r = j;
+					pal[i + 32].g = 0;
+					pal[i + 32].b = 0;
+					pal[i + 64].r = 0;
+					pal[i + 64].g = j;
+					pal[i + 64].b = 0;
+					pal[i + 96].r = 0;
+					pal[i + 96].g = 0;
+					pal[i + 96].b = j;
+					pal[i + 128].r = j;
+					pal[i + 128].g = j;
+					pal[i + 128].b = 0;
+					pal[i + 160].r = j;
+					pal[i + 160].g = 0;
+					pal[i + 160].b = j;
+					pal[i + 192].r = 0;
+					pal[i + 192].g = j;
+					pal[i + 192].b = j;
+				}
+				for(int i = 0 ; i < 8 ; ++i)
+				{
+					const int j = i * 255 / 7;
+					pal[i + 224].r = j;
+					pal[i + 224].g = j >> 1;
+					pal[i + 224].b = j >> 1;
+					pal[i + 232].r = j >> 1;
+					pal[i + 232].g = j;
+					pal[i + 232].b = j >> 1;
+					pal[i + 240].r = j >> 1;
+					pal[i + 240].g = j >> 1;
+					pal[i + 240].b = j;
+					pal[i + 248].r = j;
+					pal[i + 248].g = j;
+					pal[i + 248].b = j >> 1;
+				}
+			}
+			SDL_SetColors(screen, pal, 0, 256);
+			if (bInit)
+			{
+				for(int r = 0 ; r < 32 ; ++r)
+					for(int g = 0 ; g < 32 ; ++g)
+						for(int b = 0 ; b < 32 ; ++b)
+							colormap[(r << 10) | (g << 5) | b] = SDL_MapRGB(format, r << 3, g << 3, b << 3);
+				bInit = false;
+			}
 		}
 		black = mapRGBA(format, 0x0, 0x0, 0x0, 0x0);
 		darkgrey = mapRGBA(format, 0x3F, 0x3F, 0x3F, 0x0);
