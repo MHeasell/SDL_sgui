@@ -42,7 +42,7 @@ inline unsigned int Font::getPixel8(SDL_Surface *bmp, int x, int y)
 
 inline void Font::setPixel8(SDL_Surface *bmp, int x, int y, unsigned int c)
 {
-	*((unsigned char*)bmp->pixels + x + y * bmp->pitch) = c;
+	*((unsigned char*)bmp->pixels + x + y * bmp->pitch) = (unsigned char)c;
 }
 
 inline unsigned int Font::getPixel16(SDL_Surface *bmp, int x, int y)
@@ -52,12 +52,12 @@ inline unsigned int Font::getPixel16(SDL_Surface *bmp, int x, int y)
 
 inline void Font::setPixel16(SDL_Surface *bmp, int x, int y, unsigned int c)
 {
-	*((unsigned short*)bmp->pixels + x + (y * bmp->pitch >> 1)) = c;
+	*((unsigned short*)bmp->pixels + x + (y * bmp->pitch >> 1)) = (unsigned short)c;
 }
 
 inline unsigned int Font::getPixel24(SDL_Surface *bmp, int x, int y)
 {
-	return (*((unsigned int*)((unsigned char*)bmp->pixels + x * 3 + y * bmp->pitch)) >> 8) & 0xFFFFFF;
+	return (*((unsigned int*)((unsigned char*)bmp->pixels + x * 3 + y * bmp->pitch)) >> 8) & 0xFFFFFFU;
 }
 
 inline void Font::setPixel24(SDL_Surface *bmp, int x, int y, unsigned int c)
@@ -99,10 +99,10 @@ inline void Font::setPixel(SDL_Surface *bmp, int x, int y, unsigned int c)
 	switch(bmp->format->BytesPerPixel)
 	{
 	case 1:
-		*((unsigned char*)bmp->pixels + x + y * bmp->pitch) = c;
+		*((unsigned char*)bmp->pixels + x + y * bmp->pitch) = (unsigned char)c;
 		return;
 	case 2:
-		*((unsigned short*)bmp->pixels + x + (y * bmp->pitch >> 1)) = c;
+		*((unsigned short*)bmp->pixels + x + (y * bmp->pitch >> 1)) = (unsigned short)c;
 		return;
 	case 3:
 		{
