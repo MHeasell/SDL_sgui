@@ -1,5 +1,6 @@
 
 #include <SDL/sgui/types.h>
+#include <cstdlib>
 
 
 namespace Gui
