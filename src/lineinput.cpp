@@ -3,6 +3,7 @@
 #include <SDL/sgui/lineinput.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
+#include <limits>
 
 using namespace std;
 
@@ -142,7 +143,7 @@ namespace Gui
 
 	int LineInput::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	int LineInput::getOptimalHeight() const

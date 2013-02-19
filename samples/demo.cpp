@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
 	MENU(M3)->addEntry("entry5", "sous entrée 2");
 
 	LINK(WIDGET(entry1), new QuitListener);
+	LINK(WIDGET(entry0), new ActionListener);
 
 	TABWIDGET(tab)->addTab("Tab 1", Spacer_(true)
 						   / (Spacer_(false) | Button_("ok") | Spacer_(false))

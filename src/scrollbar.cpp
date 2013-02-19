@@ -4,6 +4,7 @@
 #include "arrowdata.h"
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
+#include <limits>
 
 using namespace std;
 
@@ -49,12 +50,12 @@ namespace Gui
 
 	int Scrollbar::getOptimalWidth() const
 	{
-		return Orientation == Vertical ? 16 : -1;
+		return Orientation == Vertical ? 16 : numeric_limits<int>::min();
 	}
 
 	int Scrollbar::getOptimalHeight() const
 	{
-		return Orientation == Horizontal ? 16 : -1;
+		return Orientation == Horizontal ? 16 : numeric_limits<int>::min();
 	}
 
 	void Scrollbar::draw(SDL_Surface *target)

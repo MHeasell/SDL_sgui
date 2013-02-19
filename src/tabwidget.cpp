@@ -4,6 +4,7 @@
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
 #include <algorithm>
+#include <limits>
 
 using namespace std;
 
@@ -77,12 +78,12 @@ namespace Gui
 
 	int TabWidget::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	int TabWidget::getOptimalHeight() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	void TabWidget::draw(SDL_Surface *target)

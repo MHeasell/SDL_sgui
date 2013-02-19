@@ -4,6 +4,7 @@
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -215,12 +216,12 @@ namespace Gui
 
 	int TextEdit::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	int TextEdit::getOptimalHeight() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	void TextEdit::resizeEvent()

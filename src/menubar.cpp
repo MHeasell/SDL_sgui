@@ -7,6 +7,7 @@
 #include <SDL/sgui/layout.h>
 #include <SDL/sgui/font.h>
 #include <algorithm>
+#include <limits>
 
 using namespace std;
 
@@ -27,7 +28,7 @@ namespace Gui
 
 	int MenuBar::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	int MenuBar::getOptimalHeight() const

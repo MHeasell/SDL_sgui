@@ -4,6 +4,7 @@
 #include <SDL/sgui/widget.h>
 #include <vector>
 #include <utility>
+#include <limits>
 
 using namespace std;
 
@@ -25,7 +26,7 @@ namespace Gui
 		int w = 0;
 		for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
 			w = max(w, (*i)->getX() + (*i)->getOptimalWidth());
-		return w == 0 ? -1 : w;
+		return w == 0 ? numeric_limits<int>::min() : w;
 	}
 
 	int UnmanagedLayout::getOptimalHeight() const
@@ -35,7 +36,7 @@ namespace Gui
 		int h = 0;
 		for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
 			h += max(h, (*i)->getY() + (*i)->getOptimalHeight());
-		return h == 0 ? -1 : h;
+		return h == 0 ? numeric_limits<int>::min() : h;
 	}
 
 	void UnmanagedLayout::operator()()

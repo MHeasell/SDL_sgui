@@ -4,6 +4,7 @@
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
 #include <queue>
+#include <limits>
 
 using namespace std;
 
@@ -35,7 +36,7 @@ namespace Gui
 		if (childs.empty())
 			return 16;
 		const int ow = (*childs.begin())->getOptimalWidth();
-		return ow == -1 ? -1 : 16 + ow;
+		return ow <= -1 ? numeric_limits<int>::min() : 16 + ow;
 	}
 
 	int Group::getOptimalHeight() const
@@ -43,7 +44,7 @@ namespace Gui
 		if (childs.empty())
 			return Caption.empty() ? 16 : 40;
 		const int oh = (*childs.begin())->getOptimalHeight();
-		return oh == -1 ? -1 : (Caption.empty() ? 16 : 40) + oh;
+		return oh <= -1 ? numeric_limits<int>::min() : (Caption.empty() ? 16 : 40) + oh;
 	}
 
 	void Group::updateLayout()

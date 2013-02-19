@@ -4,6 +4,7 @@
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
 #include <sstream>
+#include <limits>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ namespace Gui
 
 	int ProgressBar::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	void ProgressBar::onSetValue()

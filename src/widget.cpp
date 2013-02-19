@@ -89,10 +89,12 @@ namespace Gui
 
 	void Widget::resize(int w, int h)
 	{
-		if (w != this->w || h != this->h)
+		if ((w != this->w && w >= 0) || (h != this->h && h >= 0))
 		{
-			this->w = w;
-			this->h = h;
+			if (w >= 0)
+				this->w = w;
+			if (h >= 0)
+				this->h = h;
 			updateLayout();
 			resizeEvent();
 		}

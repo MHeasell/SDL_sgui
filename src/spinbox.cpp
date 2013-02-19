@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include "arrowdata.h"
+#include <limits>
 
 using namespace std;
 
@@ -48,7 +49,7 @@ namespace Gui
 
 	int SpinBox::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	int SpinBox::getOptimalHeight() const

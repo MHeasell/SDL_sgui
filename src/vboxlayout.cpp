@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <typeinfo>
+#include <limits>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ namespace Gui
 		for(vector< pair<Widget*, uint32> >::iterator i = childs.begin() ; i != childs.end() ; ++i)
 		{
 			optim.push_back(i->first->getOptimalHeight());
-			if (optim.back() == -1)
+			if (optim.back() <= -1)
 				++nblanks;
 			else
 				th += optim.back();
@@ -88,7 +89,7 @@ namespace Gui
 		int w = 0;
 		for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
 			w = max(w, (*i)->getOptimalWidth());
-		return w == 0 ? -1 : w;
+		return w == 0 ? numeric_limits<int>::min() : w;
 	}
 
 	int VBoxLayout::getOptimalHeight() const
@@ -98,7 +99,7 @@ namespace Gui
 		int h = 0;
 		for(set<Widget*>::iterator i = parent->childs.begin() ; i != parent->childs.end() ; ++i)
 			h += max(0, (*i)->getOptimalHeight());
-		return h == 0 ? -1 : h;
+		return h == 0 ? numeric_limits<int>::min() : h;
 	}
 
 }

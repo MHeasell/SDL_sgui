@@ -1,6 +1,7 @@
 
 #include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/spacer.h>
+#include <limits>
 
 namespace Gui
 {
@@ -15,12 +16,12 @@ namespace Gui
 
 	int Spacer::getOptimalWidth() const
 	{
-		return vert ? 0 : -1;
+		return vert ? 0 : std::numeric_limits<int>::min();
 	}
 
 	int Spacer::getOptimalHeight() const
 	{
-		return vert ? -1 : 0;
+		return vert ? std::numeric_limits<int>::min() : 0;
 	}
 
 }

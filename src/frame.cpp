@@ -2,6 +2,7 @@
 #include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/frame.h>
 #include <SDL/sgui/renderapi.h>
+#include <limits>
 
 using namespace std;
 
@@ -35,7 +36,7 @@ namespace Gui
 		if (childs.empty())
 			return 10;
 		const int ow = (*childs.begin())->getOptimalWidth();
-		return ow == -1 ? -1 : 10 + ow;
+		return ow <= -1 ? numeric_limits<int>::min() : 10 + ow;
 	}
 
 	int Frame::getOptimalHeight() const
@@ -43,7 +44,7 @@ namespace Gui
 		if (childs.empty())
 			return 10;
 		const int oh = (*childs.begin())->getOptimalHeight();
-		return oh == -1 ? -1 : 10 + oh;
+		return oh <= -1 ? numeric_limits<int>::min() : 10 + oh;
 	}
 
 	void Frame::updateLayout()

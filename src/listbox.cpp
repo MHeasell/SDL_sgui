@@ -4,6 +4,7 @@
 #include <SDL/sgui/frame.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
+#include <limits>
 
 using namespace std;
 
@@ -203,12 +204,12 @@ namespace Gui
 
 	int ListBox::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	int ListBox::getOptimalHeight() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	void ListBox::mouseLeave()

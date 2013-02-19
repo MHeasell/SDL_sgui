@@ -5,6 +5,7 @@
 #include <SDL/sgui/scrollbar.h>
 #include <SDL/sgui/frame.h>
 #include <SDL/sgui/unmanagedlayout.h>
+#include <limits>
 
 using namespace std;
 
@@ -36,12 +37,12 @@ namespace Gui
 
 	int ScrollArea::getOptimalWidth() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	int ScrollArea::getOptimalHeight() const
 	{
-		return -1;
+		return numeric_limits<int>::min();
 	}
 
 	void ScrollArea::setCentralWidget(Widget *widget)
