@@ -30,10 +30,10 @@ protected:
 	virtual void resizeEvent();
 
 private:
-	uint32 shift;
+	sint32 shift;
 
 	PROPERTY(ustring, Text);
-	PROPERTY(uint32, CursorPos);
+	PROPERTY(sint32, CursorPos);
 	PROPERTY(bool, Password);
 };
 

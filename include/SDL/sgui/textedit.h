@@ -35,7 +35,7 @@ protected:
 	virtual void mouseLeave();
 
 private:
-	uint32 shiftrow, shiftcol;
+	sint32 shiftrow, shiftcol;
 	std::vector<std::wstring> lines;
 
 	PROPERTY(uint32, CursorRow);

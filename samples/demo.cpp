@@ -1,6 +1,6 @@
 
 #include <SDL/sgui/sdl-headers.h>
-#include <SDL/SDL_image.h>
+#include <SDL_image.h>
 #include <SDL/SDL_sgui.h>
 
 #include <iostream>
@@ -27,6 +27,8 @@ protected:
 	}
 };
 
+#undef main
+
 int main(int argc, char *argv[])
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -34,6 +36,7 @@ int main(int argc, char *argv[])
 	Window wnd("window", 800, 600, Window::RESIZEABLE);
 	wnd.setTitle("Hello World!");
 	wnd.setLayout(new HBoxLayout);
+//	wnd.setLayout(new UnmanagedLayout);
 	wnd.setResizeable(true);
 
 	wnd.addChild(TabWidget_("tab"));
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
 	SPINBOX(spin)->setStep(0.1);
 	SPINBOX(spin)->setMaximum(10);
 	SPINBOX(spin)->setValue(5);
-
+	TABWIDGET(tab)->addTab("Tab 6", LineInput_("line"));
 	wnd();
 
 	return 0;
