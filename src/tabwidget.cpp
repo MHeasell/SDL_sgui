@@ -26,9 +26,8 @@ namespace Gui
 		for(vector<pair<wstring, Widget*> >::iterator i = tabs.begin() ; i != tabs.end() ; ++i)
 			if (i->second == widget)
 				return i - tabs.begin();
-		Widget::addChild(widget);
 		tabs.push_back(make_pair(title, widget));
-		updateLayout();
+		Widget::addChild(widget);
 		return tabs.size() - 1;
 	}
 
@@ -39,7 +38,9 @@ namespace Gui
 
 		Widget::remove(tabs[idx].second);
 		tabs.erase(tabs.begin() + idx);
-		CurrentTab = clamp<int>(CurrentTab, 0, tabs.size() - 1);
+		const int ct = clamp<int>(CurrentTab, 0, tabs.size() - 1);
+		if (ct != CurrentTab)
+			setCurrentTab(ct);
 		refresh();
 	}
 
@@ -73,7 +74,8 @@ namespace Gui
 		if (idx < 0 || idx >= int(tabs.size()))
 			return;
 		tabs[idx].second = widget;
-		updateLayout();
+		if (idx == CurrentTab)
+			updateLayout();
 	}
 
 	int TabWidget::getOptimalWidth() const

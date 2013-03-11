@@ -10,7 +10,7 @@ namespace Gui
 	{
 	}
 
-	void Floatting::refresh(bool chain)
+	void Floatting::refresh(const bool chain)
 	{
 		Widget::refresh(chain);
 		if (wnd)

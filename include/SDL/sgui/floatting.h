@@ -15,7 +15,7 @@ namespace Gui
 		void setWindow(Window *wnd)	{	this->wnd = wnd;	}
 		Window *getWindow()	{	return wnd;	}
 
-		virtual void refresh(bool chain = false);
+		virtual void refresh(const bool chain = false);
 
 		virtual Widget *getRoot();
 

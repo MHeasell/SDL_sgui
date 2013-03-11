@@ -35,11 +35,13 @@ int main(int argc, char *argv[])
 
 	Window wnd("window", 800, 600, Window::RESIZEABLE);
 	wnd.setTitle("Hello World!");
-	wnd.setLayout(new HBoxLayout);
-//	wnd.setLayout(new UnmanagedLayout);
+//	wnd.setLayout(new HBoxLayout);
+	wnd.setLayout(new UnmanagedLayout);
 	wnd.setResizeable(true);
 
 	wnd.addChild(TabWidget_("tab"));
+	TABWIDGET(tab)->setLayout(new UnmanagedLayout);
+	TABWIDGET(tab)->resize(800,400);
 
 	wnd.setMenuBar(MenuBar_("menubar"));
 	MENUBAR(menubar)->addMenu(Menu_("M1", "Menu1"));
@@ -86,6 +88,7 @@ int main(int argc, char *argv[])
 	SPINBOX(spin)->setMaximum(10);
 	SPINBOX(spin)->setValue(5);
 	TABWIDGET(tab)->addTab("Tab 6", LineInput_("line"));
+
 	wnd();
 
 	return 0;
