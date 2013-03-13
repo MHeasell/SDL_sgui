@@ -4,7 +4,6 @@
 #include <SDL/sgui/scrollarea.h>
 #include <SDL/sgui/scrollbar.h>
 #include <SDL/sgui/frame.h>
-#include <SDL/sgui/unmanagedlayout.h>
 #include <limits>
 
 using namespace std;
@@ -18,7 +17,6 @@ namespace Gui
 		ShiftY = 0;
 		bUpdatingLayout = true;
 		frame = new Frame(L"", new Widget(L""), this);
-		frame->setLayout(new UnmanagedLayout);
 		vscroll = new Scrollbar(L"", Scrollbar::Vertical, this);
 		hscroll = new Scrollbar(L"", Scrollbar::Horizontal, this);
 		vscroll->setMinimum(0);

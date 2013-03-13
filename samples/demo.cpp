@@ -90,6 +90,5 @@ int main(int argc, char *argv[])
 	TABWIDGET(tab)->addTab("Tab 6", LineInput_("line"));
 
 	wnd();
-
 	return 0;
 }
