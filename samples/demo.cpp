@@ -23,6 +23,8 @@ class ActionListener : public Receiver
 protected:
 	virtual void proc(const std::wstring &name)
 	{
+		if (name == L"entry5")
+			TABWIDGET(tab)->setCurrentTab(1);
 		cout << toUtf8(name) << endl;
 	}
 };
@@ -42,6 +44,7 @@ int main(int argc, char *argv[])
 	wnd.addChild(TabWidget_("tab"));
 	TABWIDGET(tab)->setLayout(new UnmanagedLayout);
 	TABWIDGET(tab)->resize(800,400);
+//	TABWIDGET(tab)->setFrameLess(true);
 
 	wnd.setMenuBar(MenuBar_("menubar"));
 	MENUBAR(menubar)->addMenu(Menu_("M1", "Menu1"));
@@ -57,6 +60,7 @@ int main(int argc, char *argv[])
 
 	LINK(WIDGET(entry1), new QuitListener);
 	LINK(WIDGET(entry0), new ActionListener);
+	LINK(WIDGET(entry5), new ActionListener);
 
 	TABWIDGET(tab)->addTab("Tab 1", Spacer_(true)
 						   / (Spacer_(false) | Button_("ok") | Spacer_(false))
@@ -75,11 +79,11 @@ int main(int argc, char *argv[])
 								  / Spacer_(true));
 
 	SCROLLAREA(scroll)->setCentralWidget(Group_("group", "group", Button_("", "   o<   ")
-										 / Picture_("", IMG_Load("font.png"))
-										 / Picture_("", IMG_Load("font.png"))
-										 / Picture_("", IMG_Load("font.png"))
-										 / Picture_("", IMG_Load("font.png"))
-										 / Picture_("", IMG_Load("font.png"))));
+										 / Picture_("", IMG_Load("image.png"))
+										 / Picture_("", IMG_Load("image.png"))
+										 / Picture_("", IMG_Load("image.png"))
+										 / Picture_("", IMG_Load("image.png"))
+										 / Picture_("", IMG_Load("image.png"))));
 
 
 	SPINBOX(spin)->setPrecision(2);

@@ -32,6 +32,7 @@ namespace Gui
 		virtual void updateLayout();
 		virtual void event(SDL_Event *e);
 		virtual void mousePressEvent(SDL_Event *e);
+		virtual void mouseEnter();
 
 	private:
 		inline void addChild(Widget &)	{}
@@ -42,6 +43,7 @@ namespace Gui
 		std::vector< std::pair<std::wstring, Widget*> > tabs;
 
 		PROPERTY2(int, CurrentTab);
+		PROPERTY2(bool, FrameLess);
 	};
 
 	inline TabWidget &TabWidget_(const ustring &Name, Widget *parent = NULL)

@@ -1,4 +1,3 @@
-
 #include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/tabwidget.h>
 #include <SDL/sgui/font.h>
@@ -14,6 +13,7 @@ namespace Gui
 	TabWidget::TabWidget(const ustring &Name, Widget *parent) : Widget(Name, parent)
 	{
 		CurrentTab = 0;
+		FrameLess = false;
 	}
 
 	TabWidget::~TabWidget()
@@ -90,6 +90,8 @@ namespace Gui
 
 	void TabWidget::draw(SDL_Surface *target)
 	{
+		if (FrameLess)
+			return;
 		const int r = 4;
 
 		for(int i = 0 ; i < int(tabs.size()) ; ++i)
@@ -155,10 +157,20 @@ namespace Gui
 
 		bUpdatingLayout = true;
 
-		tabs[CurrentTab].second->w = w - 16;
-		tabs[CurrentTab].second->h = h - 40;
-		tabs[CurrentTab].second->x = 8;
-		tabs[CurrentTab].second->y = 32;
+		if (FrameLess)
+		{
+			tabs[CurrentTab].second->w = w;
+			tabs[CurrentTab].second->h = h;
+			tabs[CurrentTab].second->x = 0;
+			tabs[CurrentTab].second->y = 0;
+		}
+		else
+		{
+			tabs[CurrentTab].second->w = w - 16;
+			tabs[CurrentTab].second->h = h - 40;
+			tabs[CurrentTab].second->x = 8;
+			tabs[CurrentTab].second->y = 32;
+		}
 		tabs[CurrentTab].second->updateLayout();
 
 		if (parent)
@@ -182,7 +194,7 @@ namespace Gui
 		case SDL_MOUSEBUTTONUP:
 			if (!tabs.empty())
 			{
-				if (getMouseX(e) < 8 || getMouseX(e) >= w - 8 || getMouseY(e) < 32 || getMouseY(e) >= h - 8)
+				if ((getMouseX(e) < 8 || getMouseX(e) >= w - 8 || getMouseY(e) < 32 || getMouseY(e) >= h - 8) && !FrameLess)
 				{
 					if (tabs[CurrentTab].second->bMouseIn)
 					{
@@ -196,7 +208,7 @@ namespace Gui
 					tabs[CurrentTab].second->mouseEnter();
 				}
 			}
-			if (getMouseX(e) < 8 || getMouseX(e) >= w - 8 || getMouseY(e) < 32 || getMouseY(e) >= h - 8)
+			if (!FrameLess && (getMouseX(e) < 8 || getMouseX(e) >= w - 8 || getMouseY(e) < 32 || getMouseY(e) >= h - 8))
 			{
 				if (e->type == SDL_MOUSEBUTTONDOWN)
 					mousePressEvent(e);
@@ -209,6 +221,15 @@ namespace Gui
 			break;
 		}
 		tabs[CurrentTab].second->event(&ev);
+	}
+
+	void TabWidget::mouseEnter()
+	{
+		if (FrameLess && !tabs.empty())
+		{
+			tabs[CurrentTab].second->bMouseIn = true;
+			tabs[CurrentTab].second->mouseEnter();
+		}
 	}
 
 	void TabWidget::paint(SDL_Surface *target)
@@ -237,7 +258,7 @@ namespace Gui
 	{
 		if (e->button.button != SDL_BUTTON_LEFT)
 			return;
-		if (e->button.x >= 2 && e->button.y >= 2 && e->button.y <= 24)
+		if (e->button.x >= 2 && e->button.y >= 2 && e->button.y <= 24 && !FrameLess)
 		{
 			const int idx = (e->button.x - 2) / 80;
 			if (idx < int(tabs.size()))
@@ -247,13 +268,38 @@ namespace Gui
 
 	void TabWidget::onSetCurrentTab()
 	{
-		CurrentTab = clamp<int>(CurrentTab, 0, tabs.size() - 1);
-		tabs[CurrentTab].second->w = w - 16;
-		tabs[CurrentTab].second->h = h - 16;
-		tabs[CurrentTab].second->x = 8;
-		tabs[CurrentTab].second->y = 32;
-		tabs[CurrentTab].second->updateLayout();
-		updateLayout();
+		if (!tabs.empty())
+		{
+			CurrentTab = clamp<int>(CurrentTab, 0, tabs.size() - 1);
+			for(int i = 0 ; i < int(tabs.size()) ; ++i)
+				if (i != CurrentTab && tabs[i].second->bMouseIn)
+				{
+					tabs[i].second->bMouseIn = false;
+					tabs[i].second->mouseLeave();
+				}
+			if (FrameLess)
+			{
+				tabs[CurrentTab].second->w = w;
+				tabs[CurrentTab].second->h = h;
+				tabs[CurrentTab].second->x = 0;
+				tabs[CurrentTab].second->y = 0;
+			}
+			else
+			{
+				tabs[CurrentTab].second->w = w - 16;
+				tabs[CurrentTab].second->h = h - 40;
+				tabs[CurrentTab].second->x = 8;
+				tabs[CurrentTab].second->y = 32;
+			}
+			tabs[CurrentTab].second->updateLayout();
+			updateLayout();
+		}
+	}
+
+	void TabWidget::onSetFrameLess()
+	{
+		onSetCurrentTab();
+		refresh();
 	}
 
 	void TabWidget::remove(Widget *widget)

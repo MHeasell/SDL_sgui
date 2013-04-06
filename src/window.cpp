@@ -98,6 +98,7 @@ namespace Gui
 						setSDLVideo();
 					else
 						updateLayout();
+					mouseLeave();
 				}
 				break;
 
@@ -108,7 +109,10 @@ namespace Gui
 				if (e.active.state == SDL_APPMOUSEFOCUS)
 				{
 					if (!e.active.gain)
+					{
 						takeFocus();
+						mouseLeave();
+					}
 				}
 				if (e.active.state == SDL_APPACTIVE && e.active.gain)
 					flip();
@@ -130,6 +134,7 @@ namespace Gui
 					break;
 				case EVENT_CLOSE:
 					SDL_SetVideoMode(0,0,0,0);
+					mouseLeave();
 					return;
 				};
 				break;

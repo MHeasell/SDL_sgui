@@ -204,6 +204,11 @@ namespace Gui
 					}
 					continue;
 				}
+				if (!(*i)->bMouseIn)
+				{
+					(*i)->bMouseIn = true;
+					(*i)->mouseEnter();
+				}
 				if ((*i)->canTakeFocus())
 					bFocusOnChild = true;
 				SDL_Event mb = *e;
@@ -228,6 +233,11 @@ namespace Gui
 						(*i)->mouseLeave();
 					}
 					continue;
+				}
+				if (!(*i)->bMouseIn)
+				{
+					(*i)->bMouseIn = true;
+					(*i)->mouseEnter();
 				}
 				SDL_Event mm = *e;
 				mm.motion.x -= (*i)->x;
@@ -369,9 +379,9 @@ namespace Gui
 		for(set<Widget*>::iterator i = childs.begin() ; i != childs.end() ; ++i)
 			if ((*i)->bMouseIn)
 			{
-			(*i)->bMouseIn = false;
-			(*i)->mouseLeave();
-		}
+				(*i)->bMouseIn = false;
+				(*i)->mouseLeave();
+			}
 	}
 
 	bool Widget::canTakeFocus() const

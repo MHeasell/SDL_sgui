@@ -1,9 +1,7 @@
-
 #include <SDL/sgui/sdl-headers.h>
 #include <SDL/sgui/textedit.h>
 #include <SDL/sgui/font.h>
 #include <SDL/sgui/renderapi.h>
-#include <iostream>
 #include <limits>
 
 using namespace std;
